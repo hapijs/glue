@@ -1,6 +1,5 @@
 // Load modules
 
-var Domain = require('domain');
 var Path = require('path');
 var Code = require('code');
 var Glue = require('..');
@@ -505,16 +504,13 @@ describe('compose()', function () {
             }
         };
 
-        var domain = Domain.create();
-        domain.on('error', function (err) {
+        compose(manifest, function (err, pack) {
 
-            expect(err.message).to.equal('Plugin --deps1 missing dependency --deps2 in server: http://localhost:80');
+            expect(function () {
+                pack.start();
+            }).to.throw('Plugin --deps1 missing dependency --deps2 in server: http://localhost:80');
+
             done();
-        });
-
-        domain.run(function () {
-
-            compose(manifest, function (err, pack) {});
         });
     });
 
