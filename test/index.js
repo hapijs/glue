@@ -61,7 +61,7 @@ describe('compose()', function () {
                 expect(err).to.not.exist();
                 pack.stop(function () {
 
-                    pack.servers[0].inject('/test1', function (res) {
+                    pack.connections[0].inject('/test1', function (res) {
 
                         expect(res.result).to.equal('testing123special-value');
                         done();
@@ -110,7 +110,7 @@ describe('compose()', function () {
                 expect(err).to.not.exist();
                 pack.stop(function () {
 
-                    pack.servers[0].inject('/test1', function (res) {
+                    pack.connections[0].inject('/test1', function (res) {
 
                         expect(res.result).to.equal('testing123special-value');
                         done();
@@ -159,7 +159,7 @@ describe('compose()', function () {
                 expect(err).to.not.exist();
                 pack.stop(function () {
 
-                    pack.servers[0].inject('/test1', function (res) {
+                    pack.connections[0].inject('/test1', function (res) {
 
                         expect(res.result).to.equal('testing123special-value');
                         done();
@@ -208,7 +208,7 @@ describe('compose()', function () {
                 expect(err).to.not.exist();
                 pack.stop(function () {
 
-                    pack.servers[0].inject('/test1', function (res) {
+                    pack.connections[0].inject('/test1', function (res) {
 
                         expect(res.result).to.equal('testing123special-value');
                         done();
@@ -249,7 +249,7 @@ describe('compose()', function () {
                 expect(err).to.not.exist();
                 pack.stop();
 
-                pack.servers[0].inject('/test1', function (res) {
+                pack.connections[0].inject('/test1', function (res) {
 
                     expect(res.result).to.equal('testing123');
                     done();
@@ -299,7 +299,7 @@ describe('compose()', function () {
                 expect(err).to.not.exist();
                 pack.stop(function () {
 
-                    pack.servers[0].inject('/test1', function (res) {
+                    pack.connections[0].inject('/test1', function (res) {
 
                         expect(res.result).to.equal('testing123special-value');
                         done();
@@ -409,8 +409,8 @@ describe('compose()', function () {
 
             expect(err).to.not.exist();
 
-            var server1 = pack.servers[0];
-            var server2 = pack.servers[1];
+            var server1 = pack.connections[0];
+            var server2 = pack.connections[1];
 
             server1.inject('/', function (res) {
 
@@ -508,7 +508,7 @@ describe('compose()', function () {
 
             expect(function () {
                 pack.start();
-            }).to.throw('Plugin --deps1 missing dependency --deps2 in server: http://localhost:80');
+            }).to.throw('Plugin --deps1 missing dependency --deps2 in connection: http://localhost:80');
 
             done();
         });
