@@ -23,7 +23,7 @@
   "devDependencies": {
     "catbox-memory": "1.x.x",
     "code": "1.x.x",
-    "hapi": "^7.2.x",
+    "hapi": "8.x.x",
     "lab": "5.x.x"
   },
   "scripts": {
