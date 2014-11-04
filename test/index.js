@@ -35,17 +35,11 @@ describe('compose()', function () {
             },
             servers: [
                 {
-                    port: 0,
-                    options: {
-                        labels: ['api', 'nasty', 'test']
-                    }
+                    labels: ['api', 'nasty', 'test']
                 },
                 {
                     host: 'localhost',
-                    port: 0,
-                    options: {
-                        labels: ['api', 'nice']
-                    }
+                    labels: ['api', 'nice']
                 }
             ],
             plugins: {
@@ -85,16 +79,12 @@ describe('compose()', function () {
             servers: [
                 {
                     port: 0,
-                    options: {
-                        labels: ['api', 'nasty', 'test']
-                    }
+                    labels: ['api', 'nasty', 'test']
                 },
                 {
                     host: 'localhost',
                     port: 0,
-                    options: {
-                        labels: ['api', 'nice']
-                    }
+                    labels: ['api', 'nice']
                 }
             ],
             plugins: {
@@ -134,16 +124,12 @@ describe('compose()', function () {
             servers: [
                 {
                     port: 0,
-                    options: {
-                        labels: ['api', 'nasty', 'test']
-                    }
+                    labels: ['api', 'nasty', 'test']
                 },
                 {
                     host: 'localhost',
                     port: 0,
-                    options: {
-                        labels: ['api', 'nice']
-                    }
+                    labels: ['api', 'nice']
                 }
             ],
             plugins: {
@@ -183,16 +169,12 @@ describe('compose()', function () {
             servers: [
                 {
                     port: 0,
-                    options: {
-                        labels: ['api', 'nasty', 'test']
-                    }
+                    labels: ['api', 'nasty', 'test']
                 },
                 {
                     host: 'localhost',
                     port: 0,
-                    options: {
-                        labels: ['api', 'nice']
-                    }
+                    labels: ['api', 'nice']
                 }
             ],
             plugins: {
@@ -224,16 +206,12 @@ describe('compose()', function () {
             servers: [
                 {
                     port: '0',
-                    options: {
-                        labels: ['api', 'nasty', 'test']
-                    }
+                    labels: ['api', 'nasty', 'test']
                 },
                 {
                     host: 'localhost',
                     port: 0,
-                    options: {
-                        labels: ['api', 'nice']
-                    }
+                    labels: ['api', 'nice']
                 }
             ],
             plugins: {
@@ -272,16 +250,12 @@ describe('compose()', function () {
             servers: [
                 {
                     port: 0,
-                    options: {
-                        labels: ['api', 'nasty', 'test']
-                    }
+                    labels: ['api', 'nasty', 'test']
                 },
                 {
                     host: 'localhost',
                     port: 0,
-                    options: {
-                        labels: ['api', 'nice']
-                    }
+                    labels: ['api', 'nice']
                 }
             ],
             plugins: {
@@ -335,10 +309,8 @@ describe('compose()', function () {
         var manifest = {
             servers: [
                 {
-                    options: {
-                        timeout: {
+                    timeout: {
 
-                        }
                     }
                 }
             ],
@@ -363,15 +335,11 @@ describe('compose()', function () {
             servers: [
                 {
                     port: 0,
-                    options: {
-                        labels: ['a', 'b']
-                    }
+                    labels: ['a', 'b']
                 },
                 {
                     port: 0,
-                    options: {
-                        labels: ['b', 'c']
-                    }
+                    labels: ['b', 'c']
                 }
             ],
             plugins: {
@@ -508,7 +476,7 @@ describe('compose()', function () {
 
             expect(function () {
                 pack.start();
-            }).to.throw('Plugin --deps1 missing dependency --deps2 in connection: http://localhost:80');
+            }).to.throw('Plugin --deps1 missing dependency --deps2 in connection: http://localhost:0');
 
             done();
         });
@@ -529,9 +497,9 @@ describe('compose()', function () {
             }
         };
 
-        expect(function() {
+        expect(function () {
 
-            compose(manifest, function () {});
+            compose(manifest, function () { });
         }).to.throw(/Invalid manifest options/);
         done();
     });
