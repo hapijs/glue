@@ -24,16 +24,16 @@ describe('compose()', function () {
 
     var compose = Glue.compose(Hapi);
 
-    it('composes pack', function (done) {
+    it('composes server', function (done) {
 
         var manifest = {
-            pack: {
+            server: {
                 cache: '../node_modules/catbox-memory',
                 app: {
                     my: 'special-value'
                 }
             },
-            servers: [
+            connections: [
                 {
                     labels: ['api', 'nasty', 'test']
                 },
@@ -47,15 +47,15 @@ describe('compose()', function () {
             }
         };
 
-        compose(manifest, function (err, pack) {
+        compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
-            pack.start(function (err) {
+            server.start(function (err) {
 
                 expect(err).to.not.exist();
-                pack.stop(function () {
+                server.stop(function () {
 
-                    pack.connections[0].inject('/test1', function (res) {
+                    server.connections[0].inject('/test1', function (res) {
 
                         expect(res.result).to.equal('testing123special-value');
                         done();
@@ -65,10 +65,10 @@ describe('compose()', function () {
         });
     });
 
-    it('composes pack (cache.engine)', function (done) {
+    it('composes server (cache.engine)', function (done) {
 
         var manifest = {
-            pack: {
+            server: {
                 cache: {
                     engine: '../node_modules/catbox-memory'
                 },
@@ -76,7 +76,7 @@ describe('compose()', function () {
                     my: 'special-value'
                 }
             },
-            servers: [
+            connections: [
                 {
                     port: 0,
                     labels: ['api', 'nasty', 'test']
@@ -92,15 +92,15 @@ describe('compose()', function () {
             }
         };
 
-        compose(manifest, function (err, pack) {
+        compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
-            pack.start(function (err) {
+            server.start(function (err) {
 
                 expect(err).to.not.exist();
-                pack.stop(function () {
+                server.stop(function () {
 
-                    pack.connections[0].inject('/test1', function (res) {
+                    server.connections[0].inject('/test1', function (res) {
 
                         expect(res.result).to.equal('testing123special-value');
                         done();
@@ -110,10 +110,10 @@ describe('compose()', function () {
         });
     });
 
-    it('composes pack (cache array)', function (done) {
+    it('composes server (cache array)', function (done) {
 
         var manifest = {
-            pack: {
+            server: {
                 cache: [{
                     engine: '../node_modules/catbox-memory'
                 }],
@@ -121,7 +121,7 @@ describe('compose()', function () {
                     my: 'special-value'
                 }
             },
-            servers: [
+            connections: [
                 {
                     port: 0,
                     labels: ['api', 'nasty', 'test']
@@ -137,15 +137,15 @@ describe('compose()', function () {
             }
         };
 
-        compose(manifest, function (err, pack) {
+        compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
-            pack.start(function (err) {
+            server.start(function (err) {
 
                 expect(err).to.not.exist();
-                pack.stop(function () {
+                server.stop(function () {
 
-                    pack.connections[0].inject('/test1', function (res) {
+                    server.connections[0].inject('/test1', function (res) {
 
                         expect(res.result).to.equal('testing123special-value');
                         done();
@@ -155,10 +155,10 @@ describe('compose()', function () {
         });
     });
 
-    it('composes pack (engine function)', function (done) {
+    it('composes server (engine function)', function (done) {
 
         var manifest = {
-            pack: {
+            server: {
                 cache: {
                     engine: require('catbox-memory')
                 },
@@ -166,7 +166,7 @@ describe('compose()', function () {
                     my: 'special-value'
                 }
             },
-            servers: [
+            connections: [
                 {
                     port: 0,
                     labels: ['api', 'nasty', 'test']
@@ -182,15 +182,15 @@ describe('compose()', function () {
             }
         };
 
-        compose(manifest, function (err, pack) {
+        compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
-            pack.start(function (err) {
+            server.start(function (err) {
 
                 expect(err).to.not.exist();
-                pack.stop(function () {
+                server.stop(function () {
 
-                    pack.connections[0].inject('/test1', function (res) {
+                    server.connections[0].inject('/test1', function (res) {
 
                         expect(res.result).to.equal('testing123special-value');
                         done();
@@ -200,10 +200,10 @@ describe('compose()', function () {
         });
     });
 
-    it('composes pack (string port)', function (done) {
+    it('composes server (string port)', function (done) {
 
         var manifest = {
-            servers: [
+            connections: [
                 {
                     port: '0',
                     labels: ['api', 'nasty', 'test']
@@ -219,15 +219,15 @@ describe('compose()', function () {
             }
         };
 
-        compose(manifest, function (err, pack) {
+        compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
-            pack.start(function (err) {
+            server.start(function (err) {
 
                 expect(err).to.not.exist();
-                pack.stop();
+                server.stop();
 
-                pack.connections[0].inject('/test1', function (res) {
+                server.connections[0].inject('/test1', function (res) {
 
                     expect(res.result).to.equal('testing123');
                     done();
@@ -236,10 +236,10 @@ describe('compose()', function () {
         });
     });
 
-    it('composes pack (relative and absolute paths)', function (done) {
+    it('composes server (relative and absolute paths)', function (done) {
 
         var manifest = {
-            pack: {
+            server: {
                 cache: {
                     engine: '../../node_modules/catbox-memory'
                 },
@@ -247,7 +247,7 @@ describe('compose()', function () {
                     my: 'special-value'
                 }
             },
-            servers: [
+            connections: [
                 {
                     port: 0,
                     labels: ['api', 'nasty', 'test']
@@ -265,15 +265,15 @@ describe('compose()', function () {
 
         manifest.plugins[__dirname + '/plugins/--test1'] = null;
 
-        compose(manifest, { relativeTo: __dirname + '/plugins' }, function (err, pack) {
+        compose(manifest, { relativeTo: __dirname + '/plugins' }, function (err, server) {
 
             expect(err).to.not.exist();
-            pack.start(function (err) {
+            server.start(function (err) {
 
                 expect(err).to.not.exist();
-                pack.stop(function () {
+                server.stop(function () {
 
-                    pack.connections[0].inject('/test1', function (res) {
+                    server.connections[0].inject('/test1', function (res) {
 
                         expect(res.result).to.equal('testing123special-value');
                         done();
@@ -283,10 +283,10 @@ describe('compose()', function () {
         });
     });
 
-    it('composes pack with ports', function (done) {
+    it('composes server with ports', function (done) {
 
         var manifest = {
-            servers: [
+            connections: [
                 {
                     port: 8000
                 },
@@ -297,7 +297,7 @@ describe('compose()', function () {
             plugins: {}
         };
 
-        compose(manifest, function (err, pack) {
+        compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
             done();
@@ -307,7 +307,7 @@ describe('compose()', function () {
     it('validates server config after defaults applied', function (done) {
 
         var manifest = {
-            servers: [
+            connections: [
                 {
                     timeout: {
 
@@ -317,22 +317,22 @@ describe('compose()', function () {
             plugins: {}
         };
 
-        compose(manifest, function (err, pack) {
+        compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
             done();
         });
     });
 
-    it('composes pack with plugin registration options', function (done) {
+    it('composes server with plugin registration options', function (done) {
 
         var manifest = {
-            pack: {
+            server: {
                 app: {
                     my: 'special-value'
                 }
             },
-            servers: [
+            connections: [
                 {
                     port: 0,
                     labels: ['a', 'b']
@@ -373,12 +373,12 @@ describe('compose()', function () {
             }
         };
 
-        compose(manifest, function (err, pack) {
+        compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
 
-            var server1 = pack.connections[0];
-            var server2 = pack.connections[1];
+            var server1 = server.connections[0];
+            var server2 = server.connections[1];
 
             server1.inject('/', function (res) {
 
@@ -430,17 +430,17 @@ describe('compose()', function () {
         });
     });
 
-    it('composes pack with inner deps', function (done) {
+    it('composes server with inner deps', function (done) {
 
         var manifest = {
-            servers: [{}],
+            connections: [{}],
             plugins: {
                 '../test/plugins/--deps1': null,
                 '../test/plugins/--deps2': null
             }
         };
 
-        compose(manifest, function (err, pack) {
+        compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
             done();
@@ -450,32 +450,32 @@ describe('compose()', function () {
     it('errors on invalid plugin', function (done) {
 
         var manifest = {
-            servers: [{}],
+            connections: [{}],
             plugins: {
                 '../test/plugins/--fail': null
             }
         };
 
-        compose(manifest, function (err, pack) {
+        compose(manifest, function (err, server) {
 
             expect(err).to.exist();
             done();
         });
     });
 
-    it('throws on pack with missing inner deps', function (done) {
+    it('throws on server with missing inner deps', function (done) {
 
         var manifest = {
-            servers: [{ host: 'localhost' }],
+            connections: [{ host: 'localhost' }],
             plugins: {
                 '../test/plugins/--deps1': null
             }
         };
 
-        compose(manifest, function (err, pack) {
+        compose(manifest, function (err, server) {
 
             expect(function () {
-                pack.start();
+                server.start();
             }).to.throw('Plugin --deps1 missing dependency --deps2 in connection: http://localhost:0');
 
             done();
@@ -485,12 +485,12 @@ describe('compose()', function () {
     it('throws on invalid manifest options', function (done) {
 
         var manifest = {
-            pack: {
+            server: {
                 app: {
                     my: 'special-value'
                 }
             },
-            servers: [
+            connections: [
             ],
             plugins: {
                 './--loaded': {}
