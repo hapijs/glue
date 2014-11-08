@@ -32,7 +32,7 @@
   "licenses": [
     {
       "type": "BSD",
-      "url": "http://github.com/hapijs/inert/raw/master/LICENSE"
+      "url": "http://github.com/hapijs/glue/raw/master/LICENSE"
     }
   ]
 }
