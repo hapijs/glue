@@ -3,7 +3,6 @@
 var Path = require('path');
 var Code = require('code');
 var Glue = require('..');
-var Hapi = require('hapi');
 var Lab = require('lab');
 
 
@@ -21,8 +20,6 @@ var expect = Code.expect;
 
 
 describe('compose()', function () {
-
-    var compose = Glue.compose(Hapi);
 
     it('composes server', function (done) {
 
@@ -47,7 +44,7 @@ describe('compose()', function () {
             }
         };
 
-        compose(manifest, function (err, server) {
+        Glue.compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
             server.start(function (err) {
@@ -92,7 +89,7 @@ describe('compose()', function () {
             }
         };
 
-        compose(manifest, function (err, server) {
+        Glue.compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
             server.start(function (err) {
@@ -137,7 +134,7 @@ describe('compose()', function () {
             }
         };
 
-        compose(manifest, function (err, server) {
+        Glue.compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
             server.start(function (err) {
@@ -182,7 +179,7 @@ describe('compose()', function () {
             }
         };
 
-        compose(manifest, function (err, server) {
+        Glue.compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
             server.start(function (err) {
@@ -219,7 +216,7 @@ describe('compose()', function () {
             }
         };
 
-        compose(manifest, function (err, server) {
+        Glue.compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
             server.start(function (err) {
@@ -265,7 +262,7 @@ describe('compose()', function () {
 
         manifest.plugins[__dirname + '/plugins/--test1'] = null;
 
-        compose(manifest, { relativeTo: __dirname + '/plugins' }, function (err, server) {
+        Glue.compose(manifest, { relativeTo: __dirname + '/plugins' }, function (err, server) {
 
             expect(err).to.not.exist();
             server.start(function (err) {
@@ -297,7 +294,7 @@ describe('compose()', function () {
             plugins: {}
         };
 
-        compose(manifest, function (err, server) {
+        Glue.compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
             done();
@@ -317,7 +314,7 @@ describe('compose()', function () {
             plugins: {}
         };
 
-        compose(manifest, function (err, server) {
+        Glue.compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
             done();
@@ -373,7 +370,7 @@ describe('compose()', function () {
             }
         };
 
-        compose(manifest, function (err, server) {
+        Glue.compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
 
@@ -440,7 +437,7 @@ describe('compose()', function () {
             }
         };
 
-        compose(manifest, function (err, server) {
+        Glue.compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
             done();
@@ -456,7 +453,7 @@ describe('compose()', function () {
             }
         };
 
-        compose(manifest, function (err, server) {
+        Glue.compose(manifest, function (err, server) {
 
             expect(err).to.exist();
             done();
@@ -472,7 +469,7 @@ describe('compose()', function () {
             }
         };
 
-        compose(manifest, function (err, server) {
+        Glue.compose(manifest, function (err, server) {
 
             expect(function () {
                 server.start();
@@ -499,7 +496,7 @@ describe('compose()', function () {
 
         expect(function () {
 
-            compose(manifest, function () { });
+            Glue.compose(manifest, function () { });
         }).to.throw(/Invalid manifest options/);
         done();
     });

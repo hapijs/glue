@@ -1,7 +1,7 @@
 {
   "name": "glue",
   "description": "Server composer for hapi.js",
-  "version": "2.0.0",
+  "version": "2.0.0-rc1",
   "repository": "git://github.com/hapijs/glue",
   "main": "index",
   "keywords": [
@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "boom": "2.x.x",
+    "hapi": "8.x.x",
     "hoek": "2.x.x",
     "items": "1.x.x",
     "joi": "4.x.x"
@@ -23,7 +24,6 @@
   "devDependencies": {
     "catbox-memory": "1.x.x",
     "code": "1.x.x",
-    "hapi": "8.x.x",
     "lab": "5.x.x"
   },
   "scripts": {
