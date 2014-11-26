@@ -62,6 +62,34 @@ describe('compose()', function () {
         });
     });
 
+    it('composes server (default)', function (done) {
+
+        var manifest = {
+            plugins: {
+                '../test/plugins/--custom': {
+                    path: '/abc'
+                }
+            }
+        };
+
+        Glue.compose(manifest, function (err, server) {
+
+            expect(err).to.not.exist();
+            server.start(function (err) {
+
+                expect(err).to.not.exist();
+                server.stop(function () {
+
+                    server.inject('/abc', function (res) {
+
+                        expect(res.result).to.equal('/abc');
+                        done();
+                    });
+                });
+            });
+        });
+    });
+
     it('composes server (cache.engine)', function (done) {
 
         var manifest = {
