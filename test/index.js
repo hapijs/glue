@@ -306,8 +306,8 @@ describe('compose()', function () {
         var manifest = {
             connections: [
                 {
-                    timeout: {
-
+                    routes: {
+                        timeout: {}
                     }
                 }
             ],
@@ -359,7 +359,7 @@ describe('compose()', function () {
                         }
                     },
                     {
-                        route: {
+                        routes: {
                             prefix: '/steve'
                         },
                         options: {
