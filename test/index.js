@@ -62,6 +62,17 @@ describe('compose()', function () {
         });
     });
 
+    it('composes server (empty)', function (done) {
+
+        var manifest = {};
+
+        Glue.compose(manifest, function (err, server) {
+
+            expect(err).to.not.exist();
+            done();
+        });
+    });
+
     it('composes server (default)', function (done) {
 
         var manifest = {
