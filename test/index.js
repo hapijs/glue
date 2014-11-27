@@ -483,6 +483,54 @@ describe('compose()', function () {
         });
     });
 
+    it('composes server with preConnections handler', function (done) {
+
+        var manifest = {};
+        var options = {
+            preConnections: function (server, callback) {
+                callback();
+            }
+        };
+
+        Glue.compose(manifest, options, function (err, server) {
+
+            expect(err).to.not.exist();
+            done();
+        });
+    });
+
+    it('composes server with prePlugins handler', function (done) {
+
+        var manifest = {};
+        var options = {
+            prePlugins: function (server, callback) {
+                callback();
+            }
+        };
+
+        Glue.compose(manifest, options, function (err, server) {
+
+            expect(err).to.not.exist();
+            done();
+        });
+    });
+
+    it('errors on failed pre handler', function (done) {
+
+        var manifest = {};
+        var options = {
+            prePlugins: function (server, callback) {
+                callback({error: 'failed'});
+            }
+        };
+
+        Glue.compose(manifest, options, function (err, server) {
+
+            expect(err).to.exist();
+            done();
+        });
+    });
+
     it('errors on invalid plugin', function (done) {
 
         var manifest = {
