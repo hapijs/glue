@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "boom": "2.x.x",
-    "hapi": "8.0.0-rc4",
+    "hapi": "8.0.0-rc6",
     "hoek": "2.x.x",
     "items": "1.x.x",
     "joi": "4.x.x"
