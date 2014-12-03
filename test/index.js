@@ -560,7 +560,7 @@ describe('compose()', function () {
 
             expect(function () {
                 server.start();
-            }).to.throw('Plugin --deps1 missing dependency --deps2 in connection: http://localhost:0');
+            }).to.throw('Plugin --deps1 missing dependency --deps2 in connection: http://localhost');
 
             done();
         });
