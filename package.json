@@ -19,7 +19,7 @@
     "hapi": "8.0.0-rc6",
     "hoek": "2.x.x",
     "items": "1.x.x",
-    "joi": "4.x.x"
+    "joi": "5.x.x"
   },
   "devDependencies": {
     "catbox-memory": "1.x.x",
