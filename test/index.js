@@ -419,11 +419,26 @@ describe('compose()', function () {
         done();
     });
 
-    it('throws on invalid plugin configuration', function (done) {
+    it('throws on invalid plugin configuration (empty instances)', function (done) {
 
         var manifest = {
             plugins: {
                 '../test/plugins/helloworld.js': []
+            }
+        };
+
+        expect(function () {
+
+            Glue.compose(manifest, function () { });
+        }).to.throw(/Invalid plugin configuration/);
+        done();
+    });
+
+    it('throws on invalid plugin configuration (bogus instance)', function (done) {
+
+        var manifest = {
+            plugins: {
+                '../test/plugins/helloworld.js': ['bogus']
             }
         };
 
