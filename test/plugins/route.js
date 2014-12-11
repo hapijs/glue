@@ -1,5 +1,7 @@
 exports.register = function (server, options, next) {
-    server.expose(server.realm.modifiers.route);
+    server.route({method: 'GET', path: 'plugin', handler: function (request, reply) {
+        reply();
+    }});
     next();
 };
 

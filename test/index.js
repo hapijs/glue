@@ -185,8 +185,7 @@ describe('compose()', function () {
         var manifest = {
             plugins: {
                 '../test/plugins/route.js': [{
-                    options: { ignored: true },
-                    routes: { prefix: '/third/planet' }
+                    routes: { prefix: '/test/' }
                 }]
             }
         };
@@ -194,13 +193,14 @@ describe('compose()', function () {
         Glue.compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
-            expect(server.plugins.route).to.exist();
-            expect(server.plugins.route.prefix).to.equal('/third/planet');
-            done();
+            server.inject('/test/plugin', function (response) {
+
+                expect(response.statusCode).to.equal(200);
+                done();
+            });
         });
     });
 
-/*
     it('composes server with plugins having a plugin loaded multiple times', function (done) {
 
         var manifest = {
@@ -212,11 +212,11 @@ describe('compose()', function () {
                 '../test/plugins/route.js': [
                     {
                         select: 'a',
-                        routes: { prefix: '/a' }
+                        routes: { prefix: '/a/' }
                     },
                     {
                         select: 'b',
-                        routes: { prefix: '/b' }
+                        routes: { prefix: '/b/' }
                     }
                 ]
             }
@@ -225,12 +225,17 @@ describe('compose()', function () {
         Glue.compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
-            expect(server.select('a').plugins.route.prefix).to.equal('/a');
-            expect(server.select('b').plugins.route.prefix).to.equal('/b');
-            done();
+            server.select('a').inject('/a/plugin', function (response) {
+
+                expect(response.statusCode).to.equal(200);
+                server.select('b').inject('/b/plugin', function (response) {
+
+                    expect(response.statusCode).to.equal(200);
+                    done();
+                });
+            });
         });
     });
-*/
 
     it('composes server with plugins resolved using options.relativeTo', function (done) {
 
@@ -253,6 +258,7 @@ describe('compose()', function () {
         var manifest = {};
         var options = {
             preConnections: function (server, callback) {
+
                 callback();
             }
         };
@@ -269,6 +275,7 @@ describe('compose()', function () {
         var manifest = {};
         var options = {
             prePlugins: function (server, callback) {
+
                 callback();
             }
         };
@@ -285,6 +292,7 @@ describe('compose()', function () {
         var manifest = {};
         var options = {
             prePlugins: function (server, callback) {
+
                 callback({error: 'failed'});
             }
         };
