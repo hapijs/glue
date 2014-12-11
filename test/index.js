@@ -21,389 +21,202 @@ var expect = Code.expect;
 
 describe('compose()', function () {
 
-    it('composes server', function (done) {
-
-        var manifest = {
-            server: {
-                cache: '../node_modules/catbox-memory',
-                app: {
-                    my: 'special-value'
-                }
-            },
-            connections: [
-                {
-                    labels: ['api', 'nasty', 'test']
-                },
-                {
-                    host: 'localhost',
-                    labels: ['api', 'nice']
-                }
-            ],
-            plugins: {
-                '../test/plugins/--test1': null
-            }
-        };
-
-        Glue.compose(manifest, function (err, server) {
-
-            expect(err).to.not.exist();
-            server.start(function (err) {
-
-                expect(err).to.not.exist();
-                server.stop(function () {
-
-                    server.connections[0].inject('/test1', function (res) {
-
-                        expect(res.result).to.equal('testing123special-value');
-                        done();
-                    });
-                });
-            });
-        });
-    });
-
-    it('composes server (empty)', function (done) {
+    it('composes server with an empty manifest', function (done) {
 
         var manifest = {};
 
         Glue.compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
+            expect(server.connections).length(1);
             done();
         });
     });
 
-    it('composes server (default)', function (done) {
+    it('composes server with server.cache as a string', function (done) {
 
         var manifest = {
-            plugins: {
-                '../test/plugins/--custom': {
-                    path: '/abc'
-                }
+            server: {
+                cache: '../node_modules/catbox-memory'
             }
         };
 
         Glue.compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
-            server.start(function (err) {
-
-                expect(err).to.not.exist();
-                server.stop(function () {
-
-                    server.inject('/abc', function (res) {
-
-                        expect(res.result).to.equal('/abc');
-                        done();
-                    });
-                });
-            });
+            done();
         });
     });
 
-    it('composes server (cache.engine)', function (done) {
+    it('composes server with server.cache as an array', function (done) {
+
+        var manifest = {
+            server: {
+                cache: ['../node_modules/catbox-memory']
+            }
+        };
+
+        Glue.compose(manifest, function (err, server) {
+
+            expect(err).to.not.exist();
+            done();
+        });
+    });
+
+    it('composes server with server.cache.engine as a string', function (done) {
 
         var manifest = {
             server: {
                 cache: {
                     engine: '../node_modules/catbox-memory'
-                },
-                app: {
-                    my: 'special-value'
                 }
-            },
-            connections: [
-                {
-                    port: 0,
-                    labels: ['api', 'nasty', 'test']
-                },
-                {
-                    host: 'localhost',
-                    port: 0,
-                    labels: ['api', 'nice']
-                }
-            ],
-            plugins: {
-                '../test/plugins/--test1': null
             }
         };
 
         Glue.compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
-            server.start(function (err) {
-
-                expect(err).to.not.exist();
-                server.stop(function () {
-
-                    server.connections[0].inject('/test1', function (res) {
-
-                        expect(res.result).to.equal('testing123special-value');
-                        done();
-                    });
-                });
-            });
+            done();
         });
     });
 
-    it('composes server (cache array)', function (done) {
+    it('composes server with server.cache.engine as a function', function (done) {
 
         var manifest = {
             server: {
                 cache: [{
-                    engine: '../node_modules/catbox-memory'
-                }],
-                app: {
-                    my: 'special-value'
-                }
-            },
-            connections: [
-                {
-                    port: 0,
-                    labels: ['api', 'nasty', 'test']
-                },
-                {
-                    host: 'localhost',
-                    port: 0,
-                    labels: ['api', 'nice']
-                }
-            ],
-            plugins: {
-                '../test/plugins/--test1': null
-            }
-        };
-
-        Glue.compose(manifest, function (err, server) {
-
-            expect(err).to.not.exist();
-            server.start(function (err) {
-
-                expect(err).to.not.exist();
-                server.stop(function () {
-
-                    server.connections[0].inject('/test1', function (res) {
-
-                        expect(res.result).to.equal('testing123special-value');
-                        done();
-                    });
-                });
-            });
-        });
-    });
-
-    it('composes server (engine function)', function (done) {
-
-        var manifest = {
-            server: {
-                cache: {
                     engine: require('catbox-memory')
-                },
-                app: {
-                    my: 'special-value'
-                }
-            },
-            connections: [
-                {
-                    port: 0,
-                    labels: ['api', 'nasty', 'test']
-                },
-                {
-                    host: 'localhost',
-                    port: 0,
-                    labels: ['api', 'nice']
-                }
-            ],
-            plugins: {
-                '../test/plugins/--test1': null
+                }]
             }
         };
 
         Glue.compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
-            server.start(function (err) {
-
-                expect(err).to.not.exist();
-                server.stop(function () {
-
-                    server.connections[0].inject('/test1', function (res) {
-
-                        expect(res.result).to.equal('testing123special-value');
-                        done();
-                    });
-                });
-            });
+            done();
         });
     });
 
-    it('composes server (string port)', function (done) {
-
-        var manifest = {
-            connections: [
-                {
-                    port: '0',
-                    labels: ['api', 'nasty', 'test']
-                },
-                {
-                    host: 'localhost',
-                    port: 0,
-                    labels: ['api', 'nice']
-                }
-            ],
-            plugins: {
-                '../test/plugins/--test1': {}
-            }
-        };
-
-        Glue.compose(manifest, function (err, server) {
-
-            expect(err).to.not.exist();
-            server.start(function (err) {
-
-                expect(err).to.not.exist();
-                server.stop();
-
-                server.connections[0].inject('/test1', function (res) {
-
-                    expect(res.result).to.equal('testing123');
-                    done();
-                });
-            });
-        });
-    });
-
-    it('composes server (relative and absolute paths)', function (done) {
+    it('composes server with server.cache.engine resolved using options.relativeTo', function (done) {
 
         var manifest = {
             server: {
-                cache: {
-                    engine: '../../node_modules/catbox-memory'
-                },
-                app: {
-                    my: 'special-value'
-                }
-            },
-            connections: [
-                {
-                    port: 0,
-                    labels: ['api', 'nasty', 'test']
-                },
-                {
-                    host: 'localhost',
-                    port: 0,
-                    labels: ['api', 'nice']
-                }
-            ],
-            plugins: {
-                './--test2': null
+                cache: '../../node_modules/catbox-memory'
             }
         };
-
-        manifest.plugins[__dirname + '/plugins/--test1'] = null;
 
         Glue.compose(manifest, { relativeTo: __dirname + '/plugins' }, function (err, server) {
 
             expect(err).to.not.exist();
-            server.start(function (err) {
-
-                expect(err).to.not.exist();
-                server.stop(function () {
-
-                    server.connections[0].inject('/test1', function (res) {
-
-                        expect(res.result).to.equal('testing123special-value');
-                        done();
-                    });
-                });
-            });
+            done();
         });
     });
 
-    it('composes server with ports', function (done) {
+    it('composes server with connections array having multiple entries', function (done) {
 
         var manifest = {
             connections: [
-                {
-                    port: 8000
-                },
-                {
-                    port: '8001'
-                }
-            ],
-            plugins: {}
+                {labels: 'a'},
+                {labels: 'b'}
+            ]
         };
 
         Glue.compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
+            expect(server.connections).length(2);
             done();
         });
     });
 
-    it('validates server config after defaults applied', function (done) {
+    it('composes server with plugins having a plugin with null options', function (done) {
 
         var manifest = {
-            connections: [
-                {
-                    routes: {
-                        timeout: {}
-                    }
-                }
-            ],
-            plugins: {}
+            plugins: {
+                '../test/plugins/helloworld.js': null
+            }
         };
 
         Glue.compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
+            expect(server.plugins.helloworld).to.exist();
+            expect(server.plugins.helloworld.hello).to.equal('world');
             done();
         });
     });
 
-    it('composes server with plugin registration options', function (done) {
+    it('composes server with plugins having a plugin registered with options', function (done) {
 
         var manifest = {
-            server: {
-                app: {
-                    my: 'special-value'
-                }
-            },
+            plugins: {
+                '../test/plugins/helloworld.js': {who: 'earth'}
+            }
+        };
+
+        Glue.compose(manifest, function (err, server) {
+
+            expect(err).to.not.exist();
+            expect(server.plugins.helloworld).to.exist();
+            expect(server.plugins.helloworld.hello).to.equal('earth');
+            done();
+        });
+    });
+
+    it('composes server with plugins having a plugin with null options and null register options', function (done) {
+
+        var manifest = {
+            plugins: {
+                '../test/plugins/helloworld.js': [{}]
+            }
+        };
+
+        Glue.compose(manifest, function (err, server) {
+
+            expect(err).to.not.exist();
+            expect(server.plugins.helloworld).to.exist();
+            expect(server.plugins.helloworld.hello).to.equal('world');
+            done();
+        });
+    });
+
+    it('composes server with plugins having a plugin registered with register options', function (done) {
+
+        var manifest = {
+            plugins: {
+                '../test/plugins/route.js': [{
+                    options: { ignored: true },
+                    routes: { prefix: '/third/planet' }
+                }]
+            }
+        };
+
+        Glue.compose(manifest, function (err, server) {
+
+            expect(err).to.not.exist();
+            expect(server.plugins.route).to.exist();
+            expect(server.plugins.route.prefix).to.equal('/third/planet');
+            done();
+        });
+    });
+
+/*
+    it('composes server with plugins having a plugin loaded multiple times', function (done) {
+
+        var manifest = {
             connections: [
-                {
-                    port: 0,
-                    labels: ['a', 'b']
-                },
-                {
-                    port: 0,
-                    labels: ['b', 'c']
-                }
+                {labels: 'a'},
+                {labels: 'b'}
             ],
             plugins: {
-                '../test/plugins/--custom': [
-                    {
-                        options: {
-                            path: '/'
-                        }
-                    },
+                '../test/plugins/route.js': [
                     {
                         select: 'a',
-                        options: {
-                            path: '/a'
-                        }
+                        routes: { prefix: '/a' }
                     },
                     {
                         select: 'b',
-                        options: {
-                            path: '/b'
-                        }
-                    },
-                    {
-                        routes: {
-                            prefix: '/steve'
-                        },
-                        options: {
-                            path: '/a'
-                        }
+                        routes: { prefix: '/b' }
                     }
                 ]
             }
@@ -412,73 +225,25 @@ describe('compose()', function () {
         Glue.compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
-
-            var server1 = server.connections[0];
-            var server2 = server.connections[1];
-
-            server1.inject('/', function (res) {
-
-                expect(res.statusCode).to.equal(200);
-                expect(res.result).to.equal('/');
-
-                server2.inject('/', function (res) {
-
-                    expect(res.statusCode).to.equal(200);
-                    expect(res.result).to.equal('/');
-
-                    server1.inject('/a', function (res) {
-
-                        expect(res.statusCode).to.equal(200);
-                        expect(res.result).to.equal('/a');
-
-                        server2.inject('/a', function (res) {
-
-                            expect(res.statusCode).to.equal(404);
-
-                            server1.inject('/b', function (res) {
-
-                                expect(res.statusCode).to.equal(200);
-                                expect(res.result).to.equal('/b');
-
-                                server2.inject('/b', function (res) {
-
-                                    expect(res.statusCode).to.equal(200);
-                                    expect(res.result).to.equal('/b');
-
-                                    server1.inject('/steve/a', function (res) {
-
-                                        expect(res.statusCode).to.equal(200);
-                                        expect(res.result).to.equal('/a');
-
-                                        server2.inject('/steve/a', function (res) {
-
-                                            expect(res.statusCode).to.equal(200);
-                                            expect(res.result).to.equal('/a');
-                                            done();
-                                        });
-                                    });
-                                });
-                            });
-                        });
-                    });
-                });
-            });
+            expect(server.select('a').plugins.route.prefix).to.equal('/a');
+            expect(server.select('b').plugins.route.prefix).to.equal('/b');
+            done();
         });
     });
+*/
 
-    it('composes server with inner deps', function (done) {
+    it('composes server with plugins resolved using options.relativeTo', function (done) {
 
         var manifest = {
-            connections: [{}],
             plugins: {
-                '../test/plugins/--deps1': null,
-                '../test/plugins/--deps2': null
+                './helloworld.js': null
             }
         };
 
-        Glue.compose(manifest, function (err, server) {
+        Glue.compose(manifest, { relativeTo: __dirname + '/plugins' }, function (err, server) {
 
             expect(err).to.not.exist();
+            expect(server.plugins.helloworld.hello).to.equal('world');
             done();
         });
     });
@@ -531,60 +296,133 @@ describe('compose()', function () {
         });
     });
 
-    it('errors on invalid plugin', function (done) {
-
-        var manifest = {
-            connections: [{}],
-            plugins: {
-                '../test/plugins/--fail': null
-            }
-        };
-
-        Glue.compose(manifest, function (err, server) {
-
-            expect(err).to.exist();
-            done();
-        });
-    });
-
-    it('throws on server with missing inner deps', function (done) {
-
-        var manifest = {
-            connections: [{ host: 'localhost' }],
-            plugins: {
-                '../test/plugins/--deps1': null
-            }
-        };
-
-        Glue.compose(manifest, function (err, server) {
-
-            expect(function () {
-                server.start();
-            }).to.throw('Plugin --deps1 missing dependency --deps2 in connection: http://localhost');
-
-            done();
-        });
-    });
-
-    it('throws on invalid manifest options', function (done) {
+    it('throws on bogus options.realativeTo path (server.cache)', function (done) {
 
         var manifest = {
             server: {
-                app: {
-                    my: 'special-value'
-                }
-            },
-            connections: [
-            ],
+                cache: './catbox-memory'
+            }
+        };
+
+        expect(function () {
+
+            Glue.compose(manifest, { relativeTo: __dirname + '/badpath' }, function () { });
+        }).to.throw(/Cannot find module/);
+        done();
+    });
+
+    it('throws on bogus options.realativeTo path (plugins)', function (done) {
+
+        var manifest = {
             plugins: {
-                './--loaded': {}
+                './helloworld.js': null
+            }
+        };
+
+        expect(function () {
+
+            Glue.compose(manifest, { relativeTo: __dirname + '/badpath' }, function () { });
+        }).to.throw(/Cannot find module/);
+        done();
+    });
+
+    it('throws on options not an object', function (done) {
+
+        var manifest = {};
+
+        expect(function () {
+
+            Glue.compose(manifest, 'hello', function () { });
+        }).to.throw(/Invalid options/);
+        done();
+    });
+
+    it('throws on callback not a function', function (done) {
+
+        var manifest = {};
+
+        expect(function () {
+
+            Glue.compose(manifest, 'hello');
+        }).to.throw(/Invalid callback/);
+        done();
+    });
+
+    it('throws on invalid manifest (not an object)', function (done) {
+
+        var manifest = 'hello';
+
+        expect(function () {
+
+            Glue.compose(manifest, function () { });
+        }).to.throw(/Invalid manifest/);
+        done();
+    });
+
+    it('throws on invalid manifest (server not an object)', function (done) {
+
+        var manifest = {
+            server: 'hello'
+        };
+
+        expect(function () {
+
+            Glue.compose(manifest, function () { });
+        }).to.throw(/Invalid manifest/);
+        done();
+    });
+
+    it('throws on invalid manifest (connections not an array)', function (done) {
+
+        var manifest = {
+            connections: 'hello'
+        };
+
+        expect(function () {
+
+            Glue.compose(manifest, function () { });
+        }).to.throw(/Invalid manifest/);
+        done();
+    });
+
+    it('throws on invalid manifest (connections must have at least one entry)', function (done) {
+
+        var manifest = {
+            connections: []
+        };
+
+        expect(function () {
+
+            Glue.compose(manifest, function () { });
+        }).to.throw(/Invalid manifest/);
+        done();
+    });
+
+    it('throws on invalid manifest (plugins not an object)', function (done) {
+
+        var manifest = {
+            plugins: 'hello'
+        };
+
+        expect(function () {
+
+            Glue.compose(manifest, function () { });
+        }).to.throw(/Invalid manifest/);
+        done();
+    });
+
+    it('throws on invalid plugin configuration', function (done) {
+
+        var manifest = {
+            plugins: {
+                '../test/plugins/helloworld.js': []
             }
         };
 
         expect(function () {
 
             Glue.compose(manifest, function () { });
-        }).to.throw(/Invalid manifest options/);
+        }).to.throw(/Invalid plugin configuration/);
         done();
     });
 });
