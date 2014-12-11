@@ -16,10 +16,10 @@ Glue exports a single function `compose` accepting a JSON `manifest` file specif
     * 'connections' - an array of connection options, passed individually in calls to [`server.connection([options])`](http://hapijs.com/api#serverconnectionoptions)
     * 'plugins' - an object holding plugin entries to register with [`server.register(plugins, [options], callback)`](http://hapijs.com/api#serverregisterplugins-options-callback).  Each key is the `name` of the plugin to load and register and the value is the plugin options.
   + `options` - an object having
-    * 'relativeTo' - (optional) a file-system path string that is used to resolve loading modules with `require`.  Used in `server.cache` and `plugins[name]`
-    * 'preConnections' - (optional) a callback function that is called prior to adding connections to the server. The function signature is `function (server)` where:
+    * 'relativeTo' - a file-system path string that is used to resolve loading modules with `require`.  Used in `server.cache` and `plugins[name]`
+    * 'preConnections' - a callback function that is called prior to adding connections to the server. The function signature is `function (server)` where:
       + `server` - is the server object returned from `new Server(options)`.
-    * 'prePlugins' - (optional) a callback function that is called prior to registering plugins with the server. The function signature is `function (server)` where:
+    * 'prePlugins' - a callback function that is called prior to registering plugins with the server. The function signature is `function (server)` where:
       + `server` - is the server object with all connections selected.
   + `callback` - the callback function with signature `function (err, server)` where:
     * `err` - the error response if a failure occurred, otherwise `null`.
