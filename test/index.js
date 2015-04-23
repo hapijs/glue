@@ -1,6 +1,5 @@
 // Load modules
 
-var Path = require('path');
 var Code = require('code');
 var Glue = require('..');
 var Lab = require('lab');
