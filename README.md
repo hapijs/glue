@@ -23,10 +23,10 @@ Glue exports a single function `compose` accepting a JSON `manifest` file specif
     * 'relativeTo' - a file-system path string that is used to resolve loading modules with `require`.  Used in `server.cache` and `plugins[name]`
     * 'preConnections' - a callback function that is called prior to adding connections to the server. The function signature is `function (server, next)` where:
       + `server` - is the server object returned from `new Server(options)`.
-      + `next`-  the callback function the method must call to return control over to glue 
+      + `next`-  the callback function the method must call to return control over to glue
     * 'prePlugins' - a callback function that is called prior to registering plugins with the server. The function signature is `function (server, next)` where:
       + `server` - is the server object with all connections selected.
-      + `next`-  the callback function the method must call to return control over to glue 
+      + `next`-  the callback function the method must call to return control over to glue
   + `callback` - the callback function with signature `function (err, server)` where:
     * `err` - the error response if a failure occurred, otherwise `null`.
     * `server` - the server object. Call `server.start()` to actually start the server.

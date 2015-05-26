@@ -2,8 +2,11 @@
   "name": "glue",
   "description": "Server composer for hapi.js",
   "version": "2.0.1",
-  "repository": "git://github.com/hapijs/glue",
-  "main": "index",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hapijs/glue"
+  },
+  "main": "lib/index.js",
   "keywords": [
     "server",
     "pack",
@@ -27,12 +30,8 @@
     "lab": "5.x.x"
   },
   "scripts": {
-    "test": "make test-cov"
+    "test": "node node_modules/lab/bin/lab -a code -t 100 -L",
+    "test-cov-html": "node node_modules/lab/bin/lab -a code -r html -o coverage.html"
   },
-  "licenses": [
-    {
-      "type": "BSD",
-      "url": "http://github.com/hapijs/glue/raw/master/LICENSE"
-    }
-  ]
+  "license": "BSD-3-Clause"
 }
