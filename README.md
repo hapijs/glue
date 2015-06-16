@@ -30,3 +30,40 @@ Glue exports a single function `compose` accepting a JSON `manifest` file specif
   + `callback` - the callback function with signature `function (err, server)` where:
     * `err` - the error response if a failure occurred, otherwise `null`.
     * `server` - the server object. Call `server.start()` to actually start the server.
+
+## Usage
+
+You create a manifest and then you can use the manifest for creating the new server:
+
+```javascript
+var Glue = require('glue');
+
+var manifest = {
+  server: {
+    debug: {
+      request: ['error']
+    }
+  },
+  connections: [{
+    port: 8080
+  }],
+  plugins: {
+    './routes/index': {}
+  }
+};
+
+var options = {
+  relativeTo: __dirname
+};
+
+Glue.compose(manifest, options, function (err, server) {
+
+    if (err) {
+        throw err;
+    }
+    server.start(function () {
+
+        console.log('woot');
+    });
+});
+```
