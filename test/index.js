@@ -115,8 +115,8 @@ describe('compose()', function () {
 
         var manifest = {
             connections: [
-                {labels: 'a'},
-                {labels: 'b'}
+                { labels: 'a' },
+                { labels: 'b' }
             ]
         };
 
@@ -149,7 +149,7 @@ describe('compose()', function () {
 
         var manifest = {
             plugins: {
-                '../test/plugins/helloworld.js': {who: 'earth'}
+                '../test/plugins/helloworld.js': { who: 'earth' }
             }
         };
 
@@ -204,8 +204,8 @@ describe('compose()', function () {
 
         var manifest = {
             connections: [
-                {labels: 'a'},
-                {labels: 'b'}
+                { labels: 'a' },
+                { labels: 'b' }
             ],
             plugins: {
                 '../test/plugins/route.js': [
@@ -292,7 +292,7 @@ describe('compose()', function () {
         var options = {
             prePlugins: function (server, callback) {
 
-                callback({error: 'failed'});
+                callback({ error: 'failed' });
             }
         };
 

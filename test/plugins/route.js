@@ -1,9 +1,13 @@
 exports.register = function (server, options, next) {
 
-    server.route({method: 'GET', path: 'plugin', handler: function (request, reply) {
+    server.route({
+        method: 'GET',
+        path: 'plugin',
+        handler: function (request, reply) {
 
-        reply();
-    }});
+            reply();
+        }
+    });
     next();
 };
 
