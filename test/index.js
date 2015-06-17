@@ -252,6 +252,41 @@ describe('compose()', function () {
         });
     });
 
+    describe('Array of plugins', function () {
+
+        it('composes server with plugins being an array of plugin objects', function (done) {
+
+            var manifest = {
+                plugins: [
+                    { '../test/plugins/helloworld.js': null }
+                ]
+            };
+
+            Glue.compose(manifest, function (err, server) {
+
+                expect(err).to.not.exist();
+                expect(server.plugins.helloworld).to.exist();
+                expect(server.plugins.helloworld.hello).to.equal('world');
+                done();
+            });
+        });
+
+        it('Only accepts plugin objects with 1 key', { timeout: 30000 }, function (done) {
+
+            var manifest = {
+                plugins: [
+                    { 'test': null, 'fail': null }
+                ]
+            };
+
+            expect(function () {
+
+                Glue.compose(manifest, function () {});
+            }).to.throw('Invalid plugin config');
+            done();
+        });
+    });
+
     it('composes server with preConnections handler', function (done) {
 
         var manifest = {};
