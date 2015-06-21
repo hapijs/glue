@@ -39,51 +39,6 @@ Glue exports a single function `compose` accepting the JSON `manifest` file spec
     * `server` - the server object. Call `server.start()` to actually start the server.
 
 
-## Guaranteeing Plugin Load Order 
-
-When using glue to bootstrap an application there is a small gotcha regarding plugin load order.  
-V8 will not guarantee JSON object elements are loaded in the sequential order defined in the object. 
-Hence, if a plugin relies on a dependecy previously declared in the `manifest`, the dependency may not be loaded first causing errors. 
-If you set the attributes.dependencies key it just specifies that dependencies must eventually exist, but does not require  
-they exist before your plugin. In short, the below does not guarantee dependencies will be loaded first. 
-
-```
-register.attributes = {
-    name: 'Auth',
-    dependencies:'haps-auth-basic' 
-};
-```
-
-### Solutions
-
-+ Quick Solution  
-  * Make the value of the manifest.plugins key an array.  
-    If the key is an array the plugins will be loaded in the sequence of the array.  
-  *  Pros: 
-    * Can quickly configure you apps plugin load order.
-    * You do not have to declare dependencies inside other plugins. 
-  *  Cons: 
-    * If the order of plugins is changed in the array, it would break the application.
-    * Developer must do accounting to determine which plugin needs what dependency. 
-    * Not an air tight solution. 
-
-+ Bullet Proof Solution  
-  * Make manifest.plugins key a JSON object listing plugins to register and use 
-    server.dependency(dependencies, [after]) in plugins to declare dependencies. 
-  * Documentation: [`server.dependecy(dependencies, [after])`](http://hapijs.com/api#serverdependencydependencies-after)
-  * Example solution: [@FennNaten Example](https://github.com/FennNaten/aqua/blob/sample/setting-deps-via-server-register/server/auth.js)
-  * Pros: 
-    * Solution is airtight.  
-    * This is the preferred hapijs solution.
-    * Just declare the plugin in the manifest.plugins JSON object. 
-    * Then in plugins that have dependencies, use server.dependency(dependencies, after) logic 
-      to ensure dependencies are loaded first. 
-    * Easy to read: Every plugin with dependecies has them clearly defined at the 
-      top of the plugin. 
-  * Cons:
-    * Plugins with dependencies code is a little more verbose.  
-    * Developer has to write a little more code.
-    
 
 ## Usage
 
@@ -122,11 +77,57 @@ Glue.compose(manifest, options, function (err, server) {
 });
 ```
 
+## Plugin Load Order and Dependencies
 
-## Sample Declaration of Plugin Dependencies
+When using glue to bootstrap an application there is a small gotcha regarding plugin load order and dependencies.  
+V8 will not guarantee JSON object elements are loaded in the sequential order defined in the object. 
+Hence, if a plugin relies on a dependecy previously declared in the `manifest`, the dependency may not be loaded first causing errors. 
+If you set the attributes.dependencies key it just specifies that dependencies must eventually exist, but does not require  
+they exist before your plugin. In short, the below does not guarantee dependencies will be loaded first. 
+
+```
+register.attributes = {
+    name: 'Auth',
+    dependencies:'haps-auth-basic' 
+};
+```
+
+### Solutions
+
++ Quick Solution  
+  * Make the value of the manifest.plugins key an array.  
+    If the key is an array the plugins will be loaded in the sequence of the array.  
+  *  Pros: 
+    * Quickly configure your apps plugin load order.
+    * Do not have to declare dependencies inside other plugins. 
+  *  Cons: 
+    * If order of plugins is changed in the array, it could break the application.
+    * Must do accounting to correctly order plugins defined in the array. 
+
++ Bullet Proof Solution  
+  * Make manifest.plugins key a JSON object listing plugins in any order to be registered. Plus, inside 
+    plugins with dependencies use `server.dependency(dependencies, [after])` logic to declare dependencies and ensure 
+    depencies are loaded first.
+  * Documentation: [`server.dependecy(dependencies, [after])`](http://hapijs.com/api#serverdependencydependencies-after)
+  * Example solution: [@FennNaten Example](https://github.com/FennNaten/aqua/blob/sample/setting-deps-via-server-register/server/auth.js)
+  * Pros: 
+    * Solution is airtight.  
+    * This is the preferred hapijs solution.
+    * Just declare the plugin in the manifest.plugins JSON object. 
+    * Then in plugins that have dependencies, use server.dependency(dependencies, after) logic 
+      to ensure dependencies are loaded first. 
+    * Easy to read: Every plugin with dependecies has them clearly defined at the 
+      top of the plugin. 
+  * Cons:
+    * Plugins with dependencies code is a little more verbose.  
+    * Developer has to write a little more code.
+    
+
+## Example of a Plugin  Declarating Dependencies
 
 Below is bullet proof solution from  @FennNaten 's example:
 [@FennNaten 's Fork of aqua](https://github.com/FennNaten/aqua/blob/sample/setting-deps-via-server-register/server/auth.js)
+
 ```
 internals = {};
 
@@ -157,7 +158,8 @@ internals.after = function(server, next){
 Glue primarily works in synergy with [Rejoice](https://github.com/hapijs/rejoice), but can be integrated directly into any Hapi application loader.
 
 ## Sources 
-@nlf gitter conversation
-@FennNaten did serious testing on Glue and plugin dependency logic see his explanations:
-[Testing Glue Dependency Logic](https://github.com/hapijs/university/pull/137)
-[Mark Strategies as Dependant](https://github.com/jedireza/aqua/issues/36)
+@FennNaten wrote explanations about Glue and plugin dependency logic.<br/> 
+See his explanations:<br/>
+[Testing Glue Dependency Logic](https://github.com/hapijs/university/pull/137)<br/>
+[Mark Strategies as Dependant](https://github.com/jedireza/aqua/issues/36)<br/>
+@nlf gitter conversation<br/>
