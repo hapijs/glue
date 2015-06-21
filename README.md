@@ -79,7 +79,7 @@ Hence, if a plugin relies on a dependecy previously declared in the `manifest`, 
 If you set the attributes.dependencies key, it just specifies that dependencies must eventually exist, but does not require  
 they exist before your plugin. So, the below does not guarantee dependencies are loaded first. 
 
-```
+``` JavaScript
 register.attributes = {
     name: 'Auth',
     dependencies:'haps-auth-basic' 
@@ -105,22 +105,19 @@ register.attributes = {
   * Pros: 
     * Solution is airtight.  
     * This is the preferred hapijs solution.
-    * Just declare the plugin in the manifest.plugins JSON object. 
-    * Then in plugins that have dependencies, use server.dependency(dependencies, after) logic 
-      to ensure dependencies are loaded first. 
+    * No accounting needed
     * Easy to read: Every plugin with dependecies has them clearly defined at the 
       top of the plugin. 
   * Cons:
-    * Plugins with dependencies code is a little more verbose.  
-    * Developer has to write a little more code.
+    * More verbose.  
   * Documentation: [`server.dependecy(dependencies, [after])`](http://hapijs.com/api#serverdependencydependencies-after)
     
 
-## Example of a Plugin  Declarating Dependencies
+## Example of a Plugin  Declaring Dependencies
 
 Bullet proof solution from  @FennNaten 's example below:
 
-```
+``` JavaScript
 internals = {};
 
 exports.register = function (server, options, next) {
@@ -155,4 +152,4 @@ Glue primarily works in synergy with [Rejoice](https://github.com/hapijs/rejoice
 See his explanations:<br/>
 [Testing Glue Dependency Logic](https://github.com/hapijs/university/pull/137)<br/>
 [Mark Strategies as Dependant](https://github.com/jedireza/aqua/issues/36)<br/>
-@nlf gitter conversation<br/>
+@nlf added clarification in gitter conversation<br/>
