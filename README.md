@@ -8,9 +8,9 @@ Lead Maintainer - [Chris Rempel](https://github.com/csrl)
 
 ## Overview
 
-Glue is a hapijs application composer which utilizes a JSON object called `manifest` to define how an 
-application is composed. The manifest object defines server options, connections, and plugin 
-registrations.  All major configurations are defined in one object named: `manifest`.  
+Glue is a hapijs application composer which utilizes a JSON object called `manifest` to compose 
+an application. The manifest defines server options, connections, and plugin 
+registrations.  All major configurations are defined in this object.  
 
  
 ## Interface
@@ -43,12 +43,9 @@ Glue exports a single function `compose` accepting the JSON `manifest` file spec
 
 When using glue to bootstrap an application there is a small gotcha regarding plugin load order.  
 V8 will not guarantee JSON object elements are loaded in the sequential order defined in the object. 
-Hence, if your plugin relies on a dependecy previously declared you may get a dependency does not exist 
-error when starting the application.
-
-The below does not work because the attributes.dependencies key just means that the server will at some point have loaded the other.
-It specifies that it must exist eventually, not that it must exist before your plugin. It will not cause a problem if you 
-declare a dependency here. It just does not guarantee it will be loaded first. 
+Hence, if a plugin relies on a dependecy previously declared in the `manifest`, the dependency may not be loaded first causing errors. 
+If you set the attributes.dependencies key it just specifies that dependencies must eventually exist, but does not require  
+they exist before your plugin. In short, the below does not guarantee dependencies will be loaded first. 
 
 ```
 register.attributes = {
