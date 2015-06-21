@@ -6,12 +6,6 @@ Server composer for hapi.js.
 
 Lead Maintainer - [Chris Rempel](https://github.com/csrl)
 
-## Overview
-
-Glue is a hapijs application composer which utilizes a JSON object called `manifest` to compose 
-an application. The manifest defines server options, connections, and plugin 
-registrations.  All major configurations are defined in this object.  
-
  
 ## Interface
 
@@ -42,7 +36,7 @@ Glue exports a single function `compose` accepting the JSON `manifest` file spec
 
 ## Usage
 
-You create a manifest and then you can use the manifest for creating the new server:
+You write a manifest and use it to create a new server:
 
 ```javascript
 var Glue = require('glue');
@@ -81,9 +75,9 @@ Glue.compose(manifest, options, function (err, server) {
 
 When using glue to bootstrap an application there is a small gotcha regarding plugin load order and dependencies.  
 V8 will not guarantee JSON object elements are loaded in the sequential order defined in the object. 
-Hence, if a plugin relies on a dependecy previously declared in the `manifest`, the dependency may not be loaded first causing errors. 
-If you set the attributes.dependencies key it just specifies that dependencies must eventually exist, but does not require  
-they exist before your plugin. In short, the below does not guarantee dependencies will be loaded first. 
+Hence, if a plugin relies on a dependecy previously declared in the `manifest`, that dependency may not be loaded first causing errors. 
+If you set the attributes.dependencies key, it just specifies that dependencies must eventually exist, but does not require  
+they exist before your plugin. So, the below does not guarantee dependencies are loaded first. 
 
 ```
 register.attributes = {
@@ -96,20 +90,18 @@ register.attributes = {
 
 + Quick Solution  
   * Make the value of the manifest.plugins key an array.  
-    If the key is an array the plugins will be loaded in the sequence of the array.  
+    If the key is an array, the plugins will be loaded in the sequence of the array.  
   *  Pros: 
-    * Quickly configure your apps plugin load order.
+    * Quickly configure application plugin load order.
     * Do not have to declare dependencies inside other plugins. 
   *  Cons: 
-    * If order of plugins is changed in the array, it could break the application.
-    * Must do accounting to correctly order plugins defined in the array. 
+    * If array has incorrect order of plugins, it will break the application.
+    * Must do accounting to ensure correct order. 
 
 + Bullet Proof Solution  
-  * Make manifest.plugins key a JSON object listing plugins in any order to be registered. Plus, inside 
-    plugins with dependencies use `server.dependency(dependencies, [after])` logic to declare dependencies and ensure 
-    depencies are loaded first.
-  * Documentation: [`server.dependecy(dependencies, [after])`](http://hapijs.com/api#serverdependencydependencies-after)
-  * Example solution: [@FennNaten Example](https://github.com/FennNaten/aqua/blob/sample/setting-deps-via-server-register/server/auth.js)
+  * Make manifest.plugins key a JSON object listing plugins registered. Then, inside 
+    plugins with dependencies use `server.dependency(dependencies, [after])` logic to ensure 
+    depencies are loaded first. Note, with this method the order plugins are listed in the JSON object is irrelevant.
   * Pros: 
     * Solution is airtight.  
     * This is the preferred hapijs solution.
@@ -121,12 +113,12 @@ register.attributes = {
   * Cons:
     * Plugins with dependencies code is a little more verbose.  
     * Developer has to write a little more code.
+  * Documentation: [`server.dependecy(dependencies, [after])`](http://hapijs.com/api#serverdependencydependencies-after)
     
 
 ## Example of a Plugin  Declarating Dependencies
 
-Below is bullet proof solution from  @FennNaten 's example:
-[@FennNaten 's Fork of aqua](https://github.com/FennNaten/aqua/blob/sample/setting-deps-via-server-register/server/auth.js)
+Bullet proof solution from  @FennNaten 's example below:
 
 ```
 internals = {};
@@ -153,6 +145,7 @@ internals.after = function(server, next){
 };
 
 ```
+Source for above sample code [@FennNaten 's Fork of aqua](https://github.com/FennNaten/aqua/blob/sample/setting-deps-via-server-register/server/auth.js)
 
 ## Other notes
 Glue primarily works in synergy with [Rejoice](https://github.com/hapijs/rejoice), but can be integrated directly into any Hapi application loader.
