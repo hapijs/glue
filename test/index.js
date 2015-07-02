@@ -322,11 +322,19 @@ describe('compose()', function () {
         });
     });
 
-    it('composes server with server instance', function (done) {
+    it('composes server with custom server instance', function (done) {
 
         var customServer = new Hapi.Server();
 
-        var manifest = {};
+        var manifest = {
+            connections: [
+                { labels: 'a' },
+                { labels: 'b' }
+            ],
+            plugins: {
+                '../test/plugins/helloworld.js': null
+            }
+        };
         var options = {
             server: customServer
         };
@@ -335,6 +343,9 @@ describe('compose()', function () {
 
             expect(err).to.not.exist();
             expect(server).to.equal(customServer);
+            expect(server.connections).length(2);
+            expect(server.plugins.helloworld).to.exist();
+            expect(server.plugins.helloworld.hello).to.equal('world');
             done();
         });
     });
