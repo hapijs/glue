@@ -340,6 +340,27 @@ describe('compose()', function () {
 
     });
 
+    it('throws on options.server when server options given (manifest.server)', function (done) {
+
+        var Hapi = require('hapi');
+        var customServer = new Hapi.Server();
+
+        var manifest = {
+            server: {
+                cache: '../node_modules/catbox-memory'
+            }
+        };
+        var options = {
+            server: customServer
+        };
+
+        expect(function () {
+
+            Glue.compose(manifest, { server: customServer }, function () { });
+        }).to.throw(/Server options not used for custom server instance/);
+        done();
+    });
+
     it('errors on failed pre handler', function (done) {
 
         var manifest = {};
