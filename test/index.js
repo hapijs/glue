@@ -350,6 +350,48 @@ describe('compose()', function () {
         });
     });
 
+    it('accepts a pre-configured custom server instance', function (done) {
+
+        var customServer = new Hapi.Server();
+        customServer.connection({ labels: 'a' });
+        customServer.connection({ labels: 'b' });
+
+        var manifest = {
+            connections: [
+                { labels: 'c' },
+                { labels: 'd' }
+            ],
+            plugins: {
+                '../test/plugins/route.js': [{
+                    routes: { prefix: '/test/' }
+                }]
+            }
+        };
+        var options = {
+            server: customServer
+        };
+
+        customServer.register(require('../test/plugins/helloworld.js'), function (err) {
+
+            expect(err).to.not.exist();
+
+            Glue.compose(manifest, options, function (err, server) {
+
+                expect(err).to.not.exist();
+                expect(server).to.equal(customServer);
+                expect(server.connections).length(4);
+                expect(server.plugins.helloworld).to.exist();
+                expect(server.plugins.helloworld.hello).to.equal('world');
+
+                server.inject('/test/plugin', function (response) {
+
+                    expect(response.statusCode).to.equal(200);
+                    done();
+                });
+            });
+        });
+    });
+
     it('throws on options.server when server options given (manifest.server)', function (done) {
 
         var customServer = new Hapi.Server();
