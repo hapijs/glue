@@ -2,6 +2,7 @@
 
 var Code = require('code');
 var Glue = require('..');
+var Hapi = require('hapi');
 var Lab = require('lab');
 
 
@@ -323,7 +324,6 @@ describe('compose()', function () {
 
     it('composes server with server instance', function (done) {
 
-        var Hapi = require('hapi');
         var customServer = new Hapi.Server();
 
         var manifest = {};
@@ -337,12 +337,10 @@ describe('compose()', function () {
             expect(server).to.equal(customServer);
             done();
         });
-
     });
 
     it('throws on options.server when server options given (manifest.server)', function (done) {
 
-        var Hapi = require('hapi');
         var customServer = new Hapi.Server();
 
         var manifest = {
