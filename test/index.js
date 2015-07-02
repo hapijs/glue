@@ -321,6 +321,25 @@ describe('compose()', function () {
         });
     });
 
+    it('composes server with server instance', function (done) {
+
+        var Hapi = require('hapi');
+        var customServer = new Hapi.Server();
+
+        var manifest = {};
+        var options = {
+            server: customServer
+        };
+
+        Glue.compose(manifest, options, function (err, server) {
+
+            expect(err).to.not.exist();
+            expect(server).to.equal(customServer);
+            done();
+        });
+
+    });
+
     it('errors on failed pre handler', function (done) {
 
         var manifest = {};
