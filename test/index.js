@@ -2,6 +2,7 @@
 
 var Code = require('code');
 var Glue = require('..');
+var Hapi = require('hapi');
 var Lab = require('lab');
 
 
@@ -319,6 +320,123 @@ describe('compose()', function () {
             expect(err).to.not.exist();
             done();
         });
+    });
+
+    it('composes server with custom server instance', function (done) {
+
+        var customServer = new Hapi.Server();
+
+        var manifest = {
+            connections: [
+                { labels: 'a' },
+                { labels: 'b' }
+            ],
+            plugins: {
+                '../test/plugins/helloworld.js': null
+            }
+        };
+        var options = {
+            server: customServer
+        };
+
+        Glue.compose(manifest, options, function (err, server) {
+
+            expect(err).to.not.exist();
+            expect(server).to.equal(customServer);
+            expect(server.connections).length(2);
+            expect(server.plugins.helloworld).to.exist();
+            expect(server.plugins.helloworld.hello).to.equal('world');
+            done();
+        });
+    });
+
+    it('accepts a pre-configured custom server instance', function (done) {
+
+        var customServer = new Hapi.Server();
+        customServer.connection({ labels: 'a' });
+        customServer.connection({ labels: 'b' });
+
+        var manifest = {
+            connections: [
+                { labels: 'c' },
+                { labels: 'd' }
+            ],
+            plugins: {
+                '../test/plugins/route.js': [{
+                    routes: { prefix: '/test/' }
+                }]
+            }
+        };
+        var options = {
+            server: customServer
+        };
+
+        customServer.register(require('../test/plugins/helloworld.js'), function (err) {
+
+            expect(err).to.not.exist();
+
+            Glue.compose(manifest, options, function (err, server) {
+
+                expect(err).to.not.exist();
+                expect(server).to.equal(customServer);
+                expect(server.connections).length(4);
+                expect(server.plugins.helloworld).to.exist();
+                expect(server.plugins.helloworld.hello).to.equal('world');
+
+                server.inject('/test/plugin', function (response) {
+
+                    expect(response.statusCode).to.equal(200);
+                    done();
+                });
+            });
+        });
+    });
+
+    it('does not overwrite configuration of custom server instance', function (done) {
+
+        var customServer = new Hapi.Server();
+        customServer.connection({ labels: 'a' });
+        customServer.connection({ labels: 'b' });
+
+        var manifest = {};
+        var options = {
+            server: customServer
+        };
+
+        customServer.register(require('../test/plugins/helloworld.js'), function (err) {
+
+            expect(err).to.not.exist();
+
+            Glue.compose(manifest, options, function (err, server) {
+
+                expect(err).to.not.exist();
+                expect(server).to.equal(customServer);
+                expect(server.connections).length(2);
+                expect(server.plugins.helloworld).to.exist();
+                expect(server.plugins.helloworld.hello).to.equal('world');
+                done();
+            });
+        });
+    });
+
+    it('throws on options.server when server options given (manifest.server)', function (done) {
+
+        var customServer = new Hapi.Server();
+
+        var manifest = {
+            server: {
+                cache: '../node_modules/catbox-memory'
+            }
+        };
+        var options = {
+            server: customServer
+        };
+
+        expect(function () {
+
+            Glue.compose(manifest, { server: customServer }, function () { });
+        }).to.throw(/Server options not used for custom server instance/);
+        done();
     });
 
     it('errors on failed pre handler', function (done) {

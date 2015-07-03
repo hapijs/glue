@@ -27,6 +27,7 @@ Glue exports a single function `compose` accepting a JSON `manifest` file specif
     * 'prePlugins' - a callback function that is called prior to registering plugins with the server. The function signature is `function (server, next)` where:
       + `server` - is the server object with all connections selected.
       + `next`-  the callback function the method must call to return control over to glue
+    * 'server' - a custom server instance to use for this manifest. You cannot specify any server options in the manifest, when using this option.
   + `callback` - the callback function with signature `function (err, server)` where:
     * `err` - the error response if a failure occurred, otherwise `null`.
     * `server` - the server object. Call `server.start()` to actually start the server.
