@@ -227,11 +227,14 @@ describe('compose()', function () {
             server.select('a').inject('/a/plugin', function (response) {
 
                 expect(response.statusCode).to.equal(200);
+
+                /* eslint-disable hapi/no-shadow-relaxed */
                 server.select('b').inject('/b/plugin', function (response) {
 
                     expect(response.statusCode).to.equal(200);
                     done();
                 });
+                /* eslint-enable hapi/no-shadow-relaxed */
             });
         });
     });
