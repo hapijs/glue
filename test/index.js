@@ -224,12 +224,12 @@ describe('compose()', function () {
         Glue.compose(manifest, function (err, server) {
 
             expect(err).to.not.exist();
-            server.select('a').inject('/a/plugin', function (response) {
+            server.select('a').inject('/a/plugin', function (responseA) {
 
-                expect(response.statusCode).to.equal(200);
-                server.select('b').inject('/b/plugin', function (response) {
+                expect(responseA.statusCode).to.equal(200);
+                server.select('b').inject('/b/plugin', function (responseB) {
 
-                    expect(response.statusCode).to.equal(200);
+                    expect(responseB.statusCode).to.equal(200);
                     done();
                 });
             });
