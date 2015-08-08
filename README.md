@@ -1,8 +1,8 @@
-#glue
+# glue
 
 Server composer for hapi.js.
 
-[![Build Status](https://secure.travis-ci.org/hapijs/glue.png)](http://travis-ci.org/hapijs/glue)
+[![Build Status](https://travis-ci.org/hapijs/glue.svg?branch=master)](https://travis-ci.org/hapijs/glue)
 
 Lead Maintainer - [Chris Rempel](https://github.com/csrl)
 
