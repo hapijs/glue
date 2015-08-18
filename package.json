@@ -22,7 +22,7 @@
     "hapi": "8.x.x || 9.x.x",
     "hoek": "2.x.x",
     "items": "1.x.x",
-    "joi": "5.x.x"
+    "joi": "5.x.x || 6.x.x"
   },
   "devDependencies": {
     "catbox-memory": "1.x.x",
