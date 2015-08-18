@@ -6,9 +6,10 @@ Server composer for hapi.js.
 
 Lead Maintainer - [Chris Rempel](https://github.com/csrl)
 
+ 
 ## Interface
 
-Glue exports a single function `compose` accepting a JSON `manifest` file specifying the Hapi server options, connections and plugins.  Glue primarily works in synergy with [Rejoice](https://github.com/hapijs/rejoice), but can be integrated directly into any Hapi application loader.
+Glue exports a single function `compose` accepting the JSON `manifest` file specifying the Hapi server options, connections and plugins.  
 
 - `compose(manifest, [options], callback)`
   + `manifest` - an object having:
@@ -31,9 +32,11 @@ Glue exports a single function `compose` accepting a JSON `manifest` file specif
     * `err` - the error response if a failure occurred, otherwise `null`.
     * `server` - the server object. Call `server.start()` to actually start the server.
 
+
+
 ## Usage
 
-You create a manifest and then you can use the manifest for creating the new server:
+You write a manifest and use it to create a new server:
 
 ```javascript
 var Glue = require('glue');
@@ -67,3 +70,86 @@ Glue.compose(manifest, options, function (err, server) {
     });
 });
 ```
+
+## Plugin Load Order and Dependencies
+
+When using glue to bootstrap an application there is a small gotcha regarding plugin load order and dependencies.  
+V8 will not guarantee JSON object elements are loaded in the sequential order defined in the object. 
+Hence, if a plugin relies on a dependecy previously declared in the `manifest`, that dependency may not be loaded first causing errors. 
+If you set the attributes.dependencies key, it just specifies that dependencies must eventually exist, but does not require  
+they exist before your plugin. So, the below does not guarantee dependencies are loaded first. 
+
+``` JavaScript
+register.attributes = {
+    name: 'Auth',
+    dependencies:'haps-auth-basic' 
+};
+```
+
+### Solutions
+
++ Quick Solution  
+  * Make the value of the manifest.plugins key an array.  
+    If the key is an array, the plugins will be loaded in the sequence of the array.  
+  *  Pros: 
+    * Quickly configure application plugin load order.
+    * Do not have to declare dependencies inside other plugins. 
+  *  Cons: 
+    * If array has incorrect order of plugins, it will break the application.
+    * Must do accounting to ensure correct order. 
+
++ Bullet Proof Solution  
+  * Make manifest.plugins key a JSON object listing plugins registered. Then, inside 
+    plugins with dependencies use `server.dependency(dependencies, [after])` logic to ensure 
+    depencies are loaded first. Note, with this method the order plugins are listed in the JSON object is irrelevant.
+  * Pros: 
+    * Solution is airtight.  
+    * This is the preferred hapijs solution.
+    * No accounting needed
+    * Easy to read: Every plugin with dependecies has them clearly defined at the 
+      top of the plugin. 
+  * Cons:
+    * More verbose.  
+  * Documentation: [`server.dependecy(dependencies, [after])`](http://hapijs.com/api#serverdependencydependencies-after)
+    
+
+## Example of a Plugin  Declaring Dependencies
+
+Bullet proof solution from  @FennNaten 's example below:
+
+``` JavaScript
+internals = {};
+
+exports.register = function (server, options, next) {
+
+    // the registration logic in internals.after will be executed on server start, 
+    // and only after dependencies are fully registered. 
+    server.dependency(['hapi-auth-cookie', 'hapi-mongo-models'], internals.after);
+
+    next();
+};
+
+// all the registration logic depends on other plugins (uses schemes and plugins-specific space), 
+// so we extract it so that we can set it up to be fired only after dependency resolution
+internals.after = function(server, next){
+
+    var Session = server.plugins['hapi-mongo-models'].Session;
+    var User = server.plugins['hapi-mongo-models'].User;
+
+    // Plugin code here.
+
+    next();
+};
+
+```
+Source for above sample code [@FennNaten 's Fork of aqua](https://github.com/FennNaten/aqua/blob/sample/setting-deps-via-server-register/server/auth.js)
+
+## Other notes
+Glue primarily works in synergy with [Rejoice](https://github.com/hapijs/rejoice), but can be integrated directly into any Hapi application loader.
+
+## Sources 
+@FennNaten wrote explanations about Glue and plugin dependency logic.<br/> 
+See his explanations:<br/>
+[Testing Glue Dependency Logic](https://github.com/hapijs/university/pull/137)<br/>
+[Mark Strategies as Dependant](https://github.com/jedireza/aqua/issues/36)<br/>
+@nlf added clarification in gitter conversation<br/>
