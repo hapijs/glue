@@ -37,27 +37,49 @@ When using an an object as the value for the `manifest.plugins` field, the order
 
 ## Usage
 
-You create a manifest and then you can use the manifest for creating the new server:
-
 ```javascript
 var Glue = require('glue');
 
 var manifest = {
-  server: {
-    debug: {
-      request: ['error']
-    }
-  },
-  connections: [{
-    port: 8080
-  }],
-  plugins: {
-    './routes/index': {}
-  }
+    server: {
+        cache: 'redis'
+    },
+    connections: [
+        {
+            port: 8000,
+            labels: ['web']
+        },
+        {
+            port: 8001,
+            labels: ['admin']
+        }
+    ],
+    plugins: [
+        {'./assets': {
+            uglify: true
+        }},
+        {'./ui-user': [
+            {
+                select: ['web'],
+                options: { }
+            }
+        ]},
+        {'./ui-admin': [
+            {
+                select: ['admin'],
+                routes: {
+                    prefix: '/admin'
+                },
+                options: {
+                    sessiontime: 500
+                }
+            }
+        ]}
+    ]
 };
 
 var options = {
-  relativeTo: __dirname
+    relativeTo: __dirname
 };
 
 Glue.compose(manifest, options, function (err, server) {
@@ -67,7 +89,53 @@ Glue.compose(manifest, options, function (err, server) {
     }
     server.start(function () {
 
-        console.log('woot');
+        console.log('Hapi days!');
+    });
+});
+```
+
+The above is translated into the following equivalent Hapi API calls.
+
+```javascript
+var server = Hapi.Server({cache: [{engine: require('redis')}]});
+server.connection({
+    port: 8000,
+    labels: ['web']
+});
+server.connection({
+    port: 8001,
+    labels: ['admin']
+});
+var pluginPath, pluginOptions, registerOptions;
+pluginPath = Path.join(__dirname, './assets');
+pluginOptions = {uglify: true};
+registerOptions = {};
+server.register({register: require(pluginPath), options: pluginOptions}, registerOptions, function (err) {
+
+    if (err) {
+        throw err;
+    }
+    pluginPath = Path.join(__dirname, './ui-user');
+    pluginOptions = {};
+    registerOptions = {select: ['web']};
+    server.register({register: require(pluginPath), options: pluginOptions}, registerOptions, function (err) {
+
+        if (err) {
+            throw err;
+        }
+        pluginPath = Path.join(__dirname, './ui-admin');
+        pluginOptions = {sessiontime: 500};
+        registerOptions = {select: ['admin'], routes: {prefix: '/admin'}};
+        server.register({register: require(pluginPath), options: pluginOptions}, registerOptions, function (err) {
+
+            if (err) {
+                throw err;
+            }
+            server.start(function () {
+
+                console.log('Hapi days!');
+            });
+        });
     });
 });
 ```
