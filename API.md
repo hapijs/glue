@@ -1,11 +1,11 @@
 
 ## Interface
 
-Glue exports a single function `compose` accepting a JSON `manifest` file specifying the Hapi server options, connections, and registrations.
+Glue exports a single function `compose` accepting a JSON `manifest` file specifying the hapi server options, connections, and registrations.
 
 ### `compose(manifest, [options], callback)`
 
-Composes a Hapi Server object where:
+Composes a hapi server object where:
 + `manifest` - an object having:
   * `server` - an object containing the options passed to [new Hapi.Server([options])](http://hapijs.com/api#new-serveroptions)
     + If `server.cache` is specified, Glue will parse the entry and replace any prototype function field (eg. `engine`) specified as string by calling `require()` with that string.
@@ -91,12 +91,12 @@ Glue.compose(manifest, options, (err, server) => {
     }
     server.start(() => {
 
-        console.log('Hapi days!');
+        console.log('hapi days!');
     });
 });
 ```
 
-The above is translated into the following equivalent Hapi API calls.
+The above is translated into the following equivalent hapi API calls.
 
 ```javascript
 const server = Hapi.Server({cache: [{engine: require('redis')}]});
@@ -138,7 +138,7 @@ server.register(plugin, registerOptions, (err) => {
             }
             server.start(() => {
 
-                console.log('Hapi days!');
+                console.log('hapi days!');
             });
         });
     });
