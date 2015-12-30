@@ -264,6 +264,47 @@ describe('compose()', () => {
             });
         });
 
+        it('has registrations with plugin registration options', (done) => {
+
+            const manifest = {
+                connections: [
+                    { labels: 'a' },
+                    { labels: 'b' }
+                ],
+                registrations: [
+                    {
+                        plugin: {
+                            register: '../test/plugins/route.js',
+                            select: 'a',
+                            routes: {
+                                prefix: '/a/'
+                            }
+                        }
+                    },
+                    {
+                        plugin: {
+                            register: '../test/plugins/helloworld.js',
+                            select: 'b'
+                        }
+                    }
+                ]
+            };
+
+            Glue.compose(manifest, (err, server) => {
+
+                expect(err).to.not.exist();
+                server.select('a').inject('/a/plugin', (responseA) => {
+
+                    expect(responseA.statusCode).to.equal(200);
+                    server.select('b').inject('/a/plugin', (responseB) => {
+
+                        expect(responseB.statusCode).to.equal(404);
+                        done();
+                    });
+                });
+            });
+        });
+
         it('has registrations having the same plugin loaded multiple times', (done) => {
 
             const manifest = {
@@ -273,15 +314,15 @@ describe('compose()', () => {
                 ],
                 registrations: [
                     {
-                        plugin: '../test/plugins/route.js',
-                        options: {
+                        plugin: {
+                            register: '../test/plugins/route.js',
                             select: 'a',
                             routes: { prefix: '/a/' }
                         }
                     },
                     {
-                        plugin: '../test/plugins/route.js',
-                        options: {
+                        plugin: {
+                            register: '../test/plugins/route.js',
                             select: 'b',
                             routes: { prefix: '/b/' }
                         }
