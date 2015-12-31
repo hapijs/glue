@@ -32,6 +32,8 @@ If you are developing a plugin, ensure your plugin dependencies are properly man
 ## Usage
 
 ```javascript
+'use strict';
+
 const Glue = require('glue');
 
 const manifest = {
@@ -99,38 +101,37 @@ Glue.compose(manifest, options, (err, server) => {
 The above is translated into the following equivalent hapi API calls.
 
 ```javascript
-const server = Hapi.Server({cache: [{engine: require('redis')}]});
-server.connection({
-    port: 8000,
-    labels: ['web']
-});
-server.connection({
-    port: 8001,
-    labels: ['admin']
-});
-let plugin, pluginPath, pluginOptions, registerOptions;
+'use strict';
+
+const server = Hapi.Server({ cache: [{ engine: require('redis') }] });
+server.connection({ port: 8000, labels: ['web'] });
+server.connection({ port: 8001, labels: ['admin'] });
+let plugin;
+let pluginPath;
+let pluginOptions;
+let registerOptions;
 pluginPath = Path.join(__dirname, './assets');
-pluginOptions = {uglify: true};
-plugin = {register: require(pluginPath), options: pluginOptions};
-registerOptions = {};
+pluginOptions = { uglify: true };
+plugin = { register: require(pluginPath), options: pluginOptions };
+registerOptions = { };
 server.register(plugin, registerOptions, (err) => {
 
     if (err) {
         throw err;
     }
     pluginPath = Path.join(__dirname, './ui-user');
-    pluginOptions = {};
-    plugin = {register: require(pluginPath), options: pluginOptions};
-    registerOptions = {select: ['web']};
+    pluginOptions = { };
+    plugin = { register: require(pluginPath), options: pluginOptions };
+    registerOptions = { select: ['web'] };
     server.register(plugin, registerOptions, (err) => {
 
         if (err) {
             throw err;
         }
         pluginPath = Path.join(__dirname, './ui-admin');
-        pluginOptions = {sessiontime: 500};
-        plugin = {register: require(pluginPath), options: pluginOptions};
-        registerOptions = {select: ['admin'], routes: {prefix: '/admin'}};
+        pluginOptions = { sessiontime: 500 };
+        plugin = { register: require(pluginPath), options: pluginOptions };
+        registerOptions = { select: ['admin'], routes: { prefix: '/admin' } };
         server.register(plugin, registerOptions, (err) => {
 
             if (err) {
