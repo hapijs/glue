@@ -3,7 +3,7 @@
 
 Glue exports a single function `compose` accepting a JSON `manifest` file specifying the hapi server options, connections, and registrations.
 
-### `compose(manifest, [options], callback)`
+### `compose(manifest, [options], [callback])`
 
 Composes a hapi server object where:
 + `manifest` - an object having:
@@ -24,6 +24,8 @@ Composes a hapi server object where:
 + `callback` - the callback function with signature `function (err, server)` where:
   * `err` - the error response if a failure occurred, otherwise `null`.
   * `server` - the server object. Call `server.start()` to actually start the server.
+
+If no `callback` is provided, a `Promise` object is returned where the value passed to the Promise resolve handler is the `server` object and the value passed to the Promise reject handler is the error response if a failure occurred.
 
 ### Notes
 
