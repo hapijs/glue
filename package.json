@@ -18,7 +18,6 @@
     "node": ">=4.0"
   },
   "dependencies": {
-    "boom": "3.x.x",
     "hapi": "11.x.x || 12.x.x",
     "hoek": "3.x.x",
     "items": "2.x.x",
