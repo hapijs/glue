@@ -362,6 +362,32 @@ describe('compose()', () => {
             });
         });
 
+        it('provides only the selected connection(s) when using options.select', (done) => {
+
+            const manifest = {
+                connections: [
+                    { labels: 'a' },
+                    { labels: 'b' }
+                ],
+                registrations: [
+                    {
+                        plugin: '../test/plugins/route.js',
+                        options: {
+                            select: 'a',
+                            routes: { prefix: '/a/' }
+                        }
+                    }
+                ]
+            };
+
+            Glue.compose(manifest, (err, server) => {
+
+                expect(err).to.not.exist();
+                expect(server.connections).length(1);
+                done();
+            });
+        });
+
         it('has a registration with the plugin resolved using options.relativeTo', (done) => {
 
             const manifest = {
