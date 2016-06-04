@@ -261,7 +261,8 @@ describe('compose()', () => {
                 registrations: [
                     {
                         plugin: {
-                            register: '../test/plugins/helloworld.js'
+                            register: '../test/plugins/helloworld.js',
+                            anything: 'whatever'
                         }
                     }
                 ]
