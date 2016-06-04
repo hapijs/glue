@@ -255,6 +255,27 @@ describe('compose()', () => {
             });
         });
 
+        it('passes through unknown plugin object fields', (done) => {
+
+            const manifest = {
+                registrations: [
+                    {
+                        plugin: {
+                            register: '../test/plugins/helloworld.js'
+                        }
+                    }
+                ]
+            };
+
+            Glue.compose(manifest, (err, server) => {
+
+                expect(err).to.not.exist();
+                expect(server.plugins.helloworld).to.exist();
+                expect(server.plugins.helloworld.hello).to.equal('world');
+                done();
+            });
+        });
+
         it('has a registration with no plugin options and no register options', (done) => {
 
             const manifest = {
