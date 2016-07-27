@@ -368,6 +368,30 @@ describe('compose()', () => {
             });
         });
 
+        it('has a registration with register options in the plugin', (done) => {
+
+            const manifest = {
+                registrations: [
+                    {
+                        plugin: {
+                            register: '../test/plugins/route.js',
+                            routes: { prefix: '/test/' }
+                        }
+                    }
+                ]
+            };
+
+            Glue.compose(manifest, (err, server) => {
+
+                expect(err).to.not.exist();
+                server.inject('/test/plugin', (response) => {
+
+                    expect(response.statusCode).to.equal(200);
+                    done();
+                });
+            });
+        });
+
         it('has registrations having the same plugin loaded multiple times', (done) => {
 
             const manifest = {
