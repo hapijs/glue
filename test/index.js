@@ -277,6 +277,30 @@ describe('compose()', () => {
             });
         });
 
+        it('passes through original plugin options', (done) => {
+
+            const manifest = {
+                registrations: [
+                    {
+                        plugin: {
+                            register: '../test/plugins/helloworld.js',
+                            options: {
+                                who: { i: 'am not a clone' }
+                            }
+                        }
+                    }
+                ]
+            };
+
+            Glue.compose(manifest, (err, server) => {
+
+                expect(err).to.not.exist();
+                expect(server.plugins.helloworld).to.exist();
+                expect(server.plugins.helloworld.hello === manifest.registrations[0].plugin.options.who).to.be.equal(true);
+                done();
+            });
+        });
+
         it('has a registration with no plugin options and no register options', (done) => {
 
             const manifest = {
