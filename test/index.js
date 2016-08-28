@@ -33,6 +33,20 @@ describe('compose()', () => {
         });
     });
 
+    it('ensures compose callback is called async', (done) => {
+
+        const manifest = {};
+        let async = true;
+
+        Glue.compose(manifest, (err, server) => {
+
+            expect(err).to.not.exist();
+            async = false;
+        });
+        expect(async).to.be.true();
+        done();
+    });
+
     it('returns a promise if no options and no callback is provided', (done) => {
 
         const manifest = {};
