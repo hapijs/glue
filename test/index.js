@@ -4,6 +4,7 @@
 const Code = require('code');
 const Glue = require('..');
 const Lab = require('lab');
+const Hoek = require('hoek');
 
 
 // Declare internals
@@ -180,6 +181,28 @@ describe('compose()', () => {
         Glue.compose(manifest, { relativeTo: __dirname + '/plugins' }, (err, server) => {
 
             expect(err).to.not.exist();
+            done();
+        });
+    });
+
+    it('composes a server without modifying the manifest', (done) => {
+
+        const manifest = {
+            registrations: [
+                {
+                    plugin: {
+                        register: '../test/plugins/helloworld.js'
+                    }
+                }
+            ]
+        };
+        const clone = Hoek.clone(manifest);
+
+        Glue.compose(manifest, (err, server) => {
+
+            expect(err).to.not.exist();
+            expect(server.plugins.helloworld).to.exist();
+            expect(Hoek.deepEqual(manifest, clone)).to.equal(true);
             done();
         });
     });
