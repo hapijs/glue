@@ -619,6 +619,21 @@ describe('compose()', () => {
         done();
     });
 
+    it('throws on invalid manifest (connections array items not objects)', (done) => {
+
+        const manifest = {
+            connections: [
+                'hello'
+            ]
+        };
+
+        expect(() => {
+
+            Glue.compose(manifest, () => { });
+        }).to.throw(/Invalid manifest/);
+        done();
+    });
+
     it('throws on invalid manifest (registrations not an array)', (done) => {
 
         const manifest = {
