@@ -18,10 +18,10 @@
     "node": ">=4.0"
   },
   "dependencies": {
-    "hapi": "11.x.x || 12.x.x || 13.x.x || 14.x.x || 15.x.x",
+    "hapi": "11.x.x || 12.x.x || 13.x.x || 14.x.x || 15.x.x || 16.x.x",
     "hoek": "4.x.x",
     "items": "2.x.x",
-    "joi": "9.x.x"
+    "joi": "10.x.x"
   },
   "devDependencies": {
     "catbox-memory": "2.x.x",
