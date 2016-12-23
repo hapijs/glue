@@ -486,6 +486,24 @@ describe('compose()', () => {
                 done();
             });
         });
+
+        it('has a registration with a ES2015 transpiled plugin', (done) => {
+
+            const manifest = {
+                registrations: [
+                    {
+                        plugin: './es2015.js'
+                    }
+                ]
+            };
+
+            Glue.compose(manifest, { relativeTo: __dirname + '/plugins' }, (err, server) => {
+
+                expect(err).to.not.exist();
+                expect(server.plugins.es2015.loaded).to.equal(true);
+                done();
+            });
+        });
     });
 
     it('composes a server with a preConnections handler', (done) => {
