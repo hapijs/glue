@@ -469,6 +469,60 @@ describe('compose()', () => {
             });
         });
 
+        it('provides only the selected connection(s) when using options.select', (done) => {
+
+            const manifest = {
+                connections: [
+                    { labels: 'a' },
+                    { labels: 'b' }
+                ],
+                registrations: [
+                    {
+                        plugin: {
+                            register: '../test/plugins/helloworld.js',
+                            options: {
+                                select: ['a']
+                            }
+                        }
+                    }
+                ]
+            };
+
+            Glue.compose(manifest, (err, server) => {
+
+                expect(err).to.not.exist();
+                expect(server.connections).length(1);
+            });
+
+            manifest.registrations[0].plugin.options.select.push('b');
+
+            Glue.compose(manifest, (err, server) => {
+
+                expect(err).to.not.exist();
+                expect(server.connections).length(2);
+            });
+
+            manifest.connections.push({
+                labels: 'c'
+            });
+
+            Glue.compose(manifest, (err, server) => {
+
+                expect(err).to.not.exist();
+                expect(server.connections).length(2);
+            });
+
+            manifest.registrations[0].plugin.options.select.push('c');
+
+            Glue.compose(manifest, (err, server) => {
+
+                expect(err).to.not.exist();
+                expect(server.connections).length(3);
+            });
+
+            done();
+        });
+
         it('has a registration with the plugin resolved using options.relativeTo', (done) => {
 
             const manifest = {
