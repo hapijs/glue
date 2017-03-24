@@ -11,7 +11,7 @@ Composes a hapi server object where:
     + If `server.cache` is specified, Glue will parse the entry and replace any prototype function field (eg. `engine`) specified as string by calling `require()` with that string.
   * `connections` - an array of connection options objects that are mapped to calls of [server.connection([options])](http://hapijs.com/api#serverconnectionoptions)
   * `registrations` - an array of objects holding entries to register with [server.register(plugin, [options], callback)](http://hapijs.com/api#serverregisterplugins-options-callback).  Each object has two fields that map directly to the `server.register` named parameters:
-    + `plugin` - Glue will parse the entry and replace any plugin function field specified as a string by calling `require()` with that string. The array form of this parameter accepted by `server.register()` is not allowed; use multiple registration objects instead.
+    + `plugin` - Glue will parse the entry and replace any plugin function field specified as a string by calling `require()` with that string or just put a plugin function to register it. The array form of this parameter accepted by `server.register()` is not allowed; use multiple registration objects instead.
     + `options` - optional option object passed to `server.register()`.
 + `options` - an object having
   * `relativeTo` - a file-system path string that is used to resolve loading modules with `require`.  Used in `server.cache` and `registrations[].plugin`
@@ -80,7 +80,15 @@ const manifest = {
                     prefix: '/admin'
                 }
             }
-        }
+        },
+        {
+            plugin: {
+                register: require('./awesome-plugin.js'),
+                options: {
+                    whyNot: true
+                }
+            }
+        },
     ]
 };
 
@@ -139,9 +147,16 @@ server.register(plugin, registerOptions, (err) => {
             if (err) {
                 throw err;
             }
-            server.start(() => {
+            plugin = require('./awesome-plugin.js');
+            server.register(plugin, {whyNot: true}, (err) => {
 
-                console.log('hapi days!');
+                if (err) {
+                    throw err;
+                }
+                server.start(() => {
+
+                    console.log('hapi days!');
+                });
             });
         });
     });
