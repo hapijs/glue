@@ -273,6 +273,23 @@ describe('compose()', () => {
             });
         });
 
+        it('has a registration with plugin function instead of path to be required', (done) => {
+
+            const manifest = {
+                registrations: [{
+                    plugin: require('./plugins/helloworld')
+                }]
+            };
+
+            Glue.compose(manifest, (err, server) => {
+
+                expect(err).to.not.exist();
+                expect(server.plugins.helloworld).to.exist();
+                expect(server.plugins.helloworld.hello).to.equal('world');
+                done();
+            });
+        });
+
         it('has a registration with no configuration', (done) => {
 
             const manifest = {
