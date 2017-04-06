@@ -149,10 +149,12 @@ server.register(plugin, registerOptions, (err) => {
             }
             plugin = require('./awesome-plugin.js');
             server.register(plugin, {whyNot: true}, (err) => {
+                
                 if (err) {
                     throw err;
                 }
                 server.start(() => {
+                    
                     console.log('hapi days!');
                 }); 
             });
