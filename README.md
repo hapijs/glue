@@ -8,15 +8,14 @@ Lead Maintainer - [Chris Rempel](https://github.com/csrl)
 
 Glue provides configuration based composition of hapi's Server object. Specifically it wraps
 
- * `server = new Hapi.Server(Options)`
- * one or more `server.connection(Options)`
- * zero or more `server.register(Plugin, Options)`
+ * `server = Hapi.server(Options)`
+ * `server.register(Plugins, Options)`
 
 calling each based on the configuration generated from the Glue manifest.
 
 ### Interface
 
-Glue's [API](API.md) is a single function `compose` accepting a JSON `manifest` file specifying the hapi server options, connections, and registrations.
+Glue's [API](API.md) is a single function `compose` accepting a JSON `manifest` specifying the hapi server options and registrations.
 
 ### hapi version dependency
 
@@ -24,4 +23,5 @@ Glue can support different versions of hapi. Adding support for a new version of
 
 By default NPM will resolve Glue's dependency on hapi using the most recent supported version of hapi. To force a specific supported hapi version for your project, include hapi in your package dependencies along side of Glue.
 
-Glue currently supports hapi **11**, **12**, **13**, **14**, **15**, and **16**.
+Glue version 5 currently only supports hapi **17**.
+For support of hapi **11**, **12**, **13**, **14**, **15**, or **16** please use Glue@4.2.x .

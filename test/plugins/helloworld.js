@@ -1,12 +1,9 @@
 'use strict';
 
-exports.register = function (server, options, next) {
+exports.register = function (server, options) {
 
     server.expose('hello', options.who || 'world');
-    next();
 };
 
-exports.register.attributes = {
-    name: 'helloworld',
-    multiple: false
-};
+exports.name = 'helloworld';
+exports.multiple = false;

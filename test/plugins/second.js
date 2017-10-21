@@ -4,13 +4,13 @@ exports.register = function (server, options) {
 
     server.route({
         method: 'GET',
-        path: 'plugin',
+        path: 'second',
         handler: function (request, h) {
 
-            return 'ok';
+            return options.value || 'ok';
         }
     });
 };
 
-exports.name = 'route';
+exports.name = 'second';
 exports.multiple = true;

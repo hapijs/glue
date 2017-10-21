@@ -1,7 +1,6 @@
 'use strict';
 // Load modules
 
-const Code = require('code');
 const Glue = require('..');
 const Lab = require('lab');
 const Hoek = require('hoek');
@@ -14,99 +13,30 @@ const internals = {};
 
 // Test shortcuts
 
-const lab = exports.lab = Lab.script();
-const describe = lab.describe;
-const it = lab.it;
-const expect = Code.expect;
-
+const { describe, expect, it } = exports.lab = Lab.script();
 
 describe('compose()', () => {
 
-    it('composes a server with an empty manifest', (done) => {
+    it('composes a server with an empty manifest', async () => {
 
         const manifest = {};
-
-        Glue.compose(manifest, (err, server) => {
-
-            expect(err).to.not.exist();
-            expect(server.connections).length(1);
-            done();
-        });
+        const server = await Glue.compose(manifest);
+        expect(server.info).to.be.an.object();
+        expect(server.info.port).to.equal(0);
     });
 
-    it('ensures compose callback is called async', (done) => {
-
-        const manifest = {};
-        let async = true;
-
-        Glue.compose(manifest, (err, server) => {
-
-            expect(err).to.not.exist();
-            async = false;
-        });
-        expect(async).to.be.true();
-        done();
-    });
-
-    it('returns a promise if no options and no callback is provided', (done) => {
-
-        const manifest = {};
-
-        Glue.compose(manifest).then((server) => {
-
-            expect(server.connections).length(1);
-            done();
-        });
-    });
-
-    it('returns a promise if no callback is provided', (done) => {
-
-        const manifest = {};
-        const options = {};
-
-        Glue.compose(manifest, options).then((server) => {
-
-            expect(server.connections).length(1);
-            done();
-        });
-    });
-
-    it('rejects a promise if an error is thrown', (done) => {
+    it('throws an error', async () => {
 
         const manifest = {
-            registrations: [
-                {
-                    plugin: './invalid-plugin'
-                }
-            ]
-        };
-
-        Glue.compose(manifest).catch((err) => {
-
-            expect(err).to.exist();
-            expect(err.code).to.equal('MODULE_NOT_FOUND');
-            done();
-        });
-    });
-
-    it('rejects a promise if an error is returned', (done) => {
-
-        const manifest = {};
-        const options = {
-            preRegister: function (server, callback) {
-
-                callback({ error: 'failed' });
+            register: {
+                plugins: ['invalidplugin']
             }
         };
 
-        Glue.compose(manifest, options).then(null, (err) => {
-
-            expect(err).to.exist();
-            done();
-        });
+        await expect(Glue.compose(manifest)).to.reject(Error, /Cannot find module/);
     });
 
-    it('composes a server with server.cache as a string', (done) => {
+    it('composes a server with server.cache as a string', async () => {
 
         const manifest = {
             server: {
@@ -114,14 +44,12 @@ describe('compose()', () => {
             }
         };
 
-        Glue.compose(manifest, (err, server) => {
-
-            expect(err).to.not.exist();
-            done();
-        });
+        const server = await Glue.compose(manifest);
+        expect(server.info).to.be.an.object();
+        expect(server.info.port).to.equal(0);
     });
 
-    it('composes a server with server.cache as an array', (done) => {
+    it('composes a server with server.cache as an array', async () => {
 
         const manifest = {
             server: {
@@ -129,14 +57,12 @@ describe('compose()', () => {
             }
         };
 
-        Glue.compose(manifest, (err, server) => {
-
-            expect(err).to.not.exist();
-            done();
-        });
+        const server = await Glue.compose(manifest);
+        expect(server.info).to.be.an.object();
+        expect(server.info.port).to.equal(0);
     });
 
-    it('composes a server with server.cache.engine as a string', (done) => {
+    it('composes a server with server.cache.engine as a string', async () => {
 
         const manifest = {
             server: {
@@ -146,14 +72,12 @@ describe('compose()', () => {
             }
         };
 
-        Glue.compose(manifest, (err, server) => {
-
-            expect(err).to.not.exist();
-            done();
-        });
+        const server = await Glue.compose(manifest);
+        expect(server.info).to.be.an.object();
+        expect(server.info.port).to.equal(0);
     });
 
-    it('composes a server with server.cache.engine as a function', (done) => {
+    it('composes a server with server.cache.engine as a function', async () => {
 
         const manifest = {
             server: {
@@ -163,14 +87,12 @@ describe('compose()', () => {
             }
         };
 
-        Glue.compose(manifest, (err, server) => {
-
-            expect(err).to.not.exist();
-            done();
-        });
+        const server = await Glue.compose(manifest);
+        expect(server.info).to.be.an.object();
+        expect(server.info.port).to.equal(0);
     });
 
-    it('composes a server with server.cache.engine resolved using options.relativeTo', (done) => {
+    it('composes a server with server.cache.engine resolved using options.relativeTo', async () => {
 
         const manifest = {
             server: {
@@ -178,368 +100,246 @@ describe('compose()', () => {
             }
         };
 
-        Glue.compose(manifest, { relativeTo: __dirname + '/plugins' }, (err, server) => {
-
-            expect(err).to.not.exist();
-            done();
-        });
+        const server = await Glue.compose(manifest, { relativeTo: __dirname + '/plugins' });
+        expect(server.info).to.be.an.object();
+        expect(server.info.port).to.equal(0);
     });
 
-    it('composes a server without modifying the manifest', (done) => {
+    it('composes a server without modifying the manifest', async () => {
 
         const manifest = {
-            registrations: [
-                {
-                    plugin: {
-                        register: '../test/plugins/helloworld.js'
-                    }
-                }
-            ]
-        };
-        const clone = Hoek.clone(manifest);
-
-        Glue.compose(manifest, (err, server) => {
-
-            expect(err).to.not.exist();
-            expect(server.plugins.helloworld).to.exist();
-            expect(Hoek.deepEqual(manifest, clone)).to.equal(true);
-            done();
-        });
-    });
-
-    describe('composes a server\'s connections', () => {
-
-        it('has no entries', (done) => {
-
-            const manifest = {
-                connections: []
-            };
-
-            Glue.compose(manifest, (err, server) => {
-
-                expect(err).to.not.exist();
-                expect(server.connections).length(1);
-                done();
-            });
-        });
-
-        it('has a single entry', (done) => {
-
-            const manifest = {
-                connections: [
-                    { labels: 'a' }
-                ]
-            };
-
-            Glue.compose(manifest, (err, server) => {
-
-                expect(err).to.not.exist();
-                expect(server.connections).length(1);
-                done();
-            });
-        });
-
-        it('has multiple entries', (done) => {
-
-            const manifest = {
-                connections: [
-                    { labels: 'a' },
-                    { labels: 'b' }
-                ]
-            };
-
-            Glue.compose(manifest, (err, server) => {
-
-                expect(err).to.not.exist();
-                expect(server.connections).length(2);
-                done();
-            });
-        });
-    });
-
-    describe('composes a server\'s registrations', () => {
-
-        it('has no registrations', (done) => {
-
-            const manifest = {
-                registrations: []
-            };
-
-            Glue.compose(manifest, (err, server) => {
-
-                expect(err).to.not.exist();
-                expect(server.plugins).length(0);
-                done();
-            });
-        });
-
-        it('has a registration with plugin function instead of path to be required', (done) => {
-
-            const manifest = {
-                registrations: [{
-                    plugin: require('./plugins/helloworld')
-                }]
-            };
-
-            Glue.compose(manifest, (err, server) => {
-
-                expect(err).to.not.exist();
-                expect(server.plugins.helloworld).to.exist();
-                expect(server.plugins.helloworld.hello).to.equal('world');
-                done();
-            });
-        });
-
-        it('has a registration with no configuration', (done) => {
-
-            const manifest = {
-                registrations: [
+            register: {
+                plugins: [
                     {
                         plugin: '../test/plugins/helloworld.js'
                     }
                 ]
-            };
+            }
+        };
+        const clone = Hoek.clone(manifest);
 
-            Glue.compose(manifest, (err, server) => {
+        const server = await Glue.compose(manifest);
+        expect(server.plugins.helloworld).to.exist();
+        expect(Hoek.deepEqual(manifest, clone)).to.equal(true);
+    });
 
-                expect(err).to.not.exist();
-                expect(server.plugins.helloworld).to.exist();
-                expect(server.plugins.helloworld.hello).to.equal('world');
-                done();
-            });
-        });
+    describe('composes a server\'s registrations', () => {
 
-        it('passes through unknown plugin object fields', (done) => {
+        it('has no registrations', async () => {
 
             const manifest = {
-                registrations: [
-                    {
-                        plugin: {
-                            register: '../test/plugins/helloworld.js',
-                            anything: 'whatever'
+                register: {
+                    plugins: []
+                }
+            };
+
+            const server = await Glue.compose(manifest);
+            expect(server.plugins).length(0);
+        });
+
+        it('has a registration with a plugin path only', async () => {
+
+            const manifest = {
+                register: {
+                    plugins: ['../test/plugins/helloworld.js']
+                }
+            };
+
+            const server = await Glue.compose(manifest);
+            expect(server.plugins.helloworld).to.exist();
+            expect(server.plugins.helloworld.hello).to.equal('world');
+        });
+
+        it('has a registration with plugin function instead of path to be required', async () => {
+
+            const manifest = {
+                register: {
+                    plugins: [{
+                        plugin: require('./plugins/helloworld')
+                    }]
+                }
+            };
+
+            const server = await Glue.compose(manifest);
+            expect(server.plugins.helloworld).to.exist();
+            expect(server.plugins.helloworld.hello).to.equal('world');
+        });
+
+        it('has a registration with no configuration', async () => {
+
+            const manifest = {
+                register: {
+                    plugins: [
+                        {
+                            plugin: '../test/plugins/helloworld.js'
                         }
-                    }
-                ]
+                    ]
+                }
             };
 
-            Glue.compose(manifest, (err, server) => {
-
-                expect(err).to.not.exist();
-                expect(server.plugins.helloworld).to.exist();
-                expect(server.plugins.helloworld.hello).to.equal('world');
-                done();
-            });
+            const server = await Glue.compose(manifest);
+            expect(server.plugins.helloworld).to.exist();
+            expect(server.plugins.helloworld.hello).to.equal('world');
         });
 
-        it('passes through original plugin options', (done) => {
+        it('passes through original plugin options', async () => {
 
             const manifest = {
-                registrations: [
-                    {
-                        plugin: {
-                            register: '../test/plugins/helloworld.js',
+                register: {
+                    plugins: [
+                        {
+                            plugin: '../test/plugins/helloworld.js',
                             options: {
                                 who: { i: 'am not a clone' }
                             }
                         }
-                    }
-                ]
+                    ]
+                }
             };
 
-            Glue.compose(manifest, (err, server) => {
-
-                expect(err).to.not.exist();
-                expect(server.plugins.helloworld).to.exist();
-                expect(server.plugins.helloworld.hello === manifest.registrations[0].plugin.options.who).to.be.equal(true);
-                done();
-            });
+            const server = await Glue.compose(manifest);
+            expect(server.plugins.helloworld).to.exist();
+            expect(server.plugins.helloworld.hello === manifest.register.plugins[0].options.who).to.be.equal(true);
         });
 
-        it('has a registration with no plugin options and no register options', (done) => {
+        it('has a registration with no plugin options and no register options', async () => {
 
             const manifest = {
-                registrations: [
-                    {
-                        plugin: {
-                            register: '../test/plugins/helloworld.js'
+                register: {
+                    plugins: [
+                        {
+                            plugin: '../test/plugins/helloworld.js'
                         }
-                    }
-                ]
+                    ]
+                }
             };
 
-            Glue.compose(manifest, (err, server) => {
-
-                expect(err).to.not.exist();
-                expect(server.plugins.helloworld).to.exist();
-                expect(server.plugins.helloworld.hello).to.equal('world');
-                done();
-            });
+            const server = await Glue.compose(manifest);
+            expect(server.plugins.helloworld).to.exist();
+            expect(server.plugins.helloworld.hello).to.equal('world');
         });
 
-        it('has a registration with plugin options and no register options', (done) => {
+        it('has a registration with plugin options and no register options', async () => {
 
             const manifest = {
-                registrations: [
-                    {
-                        plugin: {
-                            register: '../test/plugins/helloworld.js',
+                register: {
+                    plugins: [
+                        {
+                            plugin: '../test/plugins/helloworld.js',
                             options: { who: 'earth' }
                         }
-                    }
-                ]
+                    ]
+                }
             };
 
-            Glue.compose(manifest, (err, server) => {
-
-                expect(err).to.not.exist();
-                expect(server.plugins.helloworld).to.exist();
-                expect(server.plugins.helloworld.hello).to.equal('earth');
-                done();
-            });
+            const server = await Glue.compose(manifest);
+            expect(server.plugins.helloworld).to.exist();
+            expect(server.plugins.helloworld.hello).to.equal('earth');
         });
 
-        it('has a registration with register options and no plugin options', (done) => {
+        it('has a registration with register options and no plugin options', async () => {
 
             const manifest = {
-                registrations: [
-                    {
-                        plugin: '../test/plugins/route.js',
-                        options: {
+                register: {
+                    plugins: [
+                        {
+                            plugin: '../test/plugins/route.js'
+                        }
+                    ],
+                    options: {
+                        routes: { prefix: '/test/' }
+                    }
+                }
+            };
+
+            const server = await Glue.compose(manifest);
+            const response = await server.inject('/test/plugin');
+            expect(response.statusCode).to.equal(200);
+        });
+
+        it('has a registration with register options in the plugin', async () => {
+
+            const manifest = {
+                register: {
+                    plugins: [
+                        {
+                            plugin: '../test/plugins/route.js',
                             routes: { prefix: '/test/' }
                         }
-                    }
-                ]
+                    ]
+                }
             };
 
-            Glue.compose(manifest, (err, server) => {
-
-                expect(err).to.not.exist();
-                server.inject('/test/plugin', (response) => {
-
-                    expect(response.statusCode).to.equal(200);
-                    done();
-                });
-            });
+            const server = await Glue.compose(manifest);
+            const response = await server.inject('/test/plugin');
+            expect(response.statusCode).to.equal(200);
         });
 
-        it('has a registration with register options in the plugin', (done) => {
+        it('has a registration with the plugin resolved using options.relativeTo', async () => {
 
             const manifest = {
-                registrations: [
-                    {
-                        plugin: {
-                            register: '../test/plugins/route.js',
+                register: {
+                    plugins: [
+                        {
+                            plugin: './helloworld.js'
+                        }
+                    ]
+                }
+            };
+
+            const server = await Glue.compose(manifest, { relativeTo: __dirname + '/plugins' });
+            expect(server.plugins.helloworld.hello).to.equal('world');
+        });
+
+        it('has a registration with different plugin syntax, some plugin options, main registration options, and plugin-level registration options', async () => {
+
+            const manifest = {
+                register: {
+                    plugins: [
+                        '../test/plugins/helloworld.js',
+                        {
+                            plugin : '../test/plugins/second.js',
+                            options: {
+                                value: 'second'
+                            }
+                        },
+                        {
+                            plugin: require('./plugins/route'),
                             routes: { prefix: '/test/' }
                         }
+                    ],
+                    options: {
+                        routes: { prefix: '/override/me/' }
                     }
-                ]
+                }
             };
 
-            Glue.compose(manifest, (err, server) => {
-
-                expect(err).to.not.exist();
-                server.inject('/test/plugin', (response) => {
-
-                    expect(response.statusCode).to.equal(200);
-                    done();
-                });
-            });
-        });
-
-        it('has registrations having the same plugin loaded multiple times', (done) => {
-
-            const manifest = {
-                connections: [
-                    { labels: 'a' },
-                    { labels: 'b' }
-                ],
-                registrations: [
-                    {
-                        plugin: '../test/plugins/route.js',
-                        options: {
-                            select: 'a',
-                            routes: { prefix: '/a/' }
-                        }
-                    },
-                    {
-                        plugin: '../test/plugins/route.js',
-                        options: {
-                            select: 'b',
-                            routes: { prefix: '/b/' }
-                        }
-                    }
-                ]
-            };
-
-            Glue.compose(manifest, (err, server) => {
-
-                expect(err).to.not.exist();
-                server.select('a').inject('/a/plugin', (responseA) => {
-
-                    expect(responseA.statusCode).to.equal(200);
-                    server.select('b').inject('/b/plugin', (responseB) => {
-
-                        expect(responseB.statusCode).to.equal(200);
-                        done();
-                    });
-                });
-            });
-        });
-
-        it('has a registration with the plugin resolved using options.relativeTo', (done) => {
-
-            const manifest = {
-                registrations: [
-                    {
-                        plugin: './helloworld.js'
-                    }
-                ]
-            };
-
-            Glue.compose(manifest, { relativeTo: __dirname + '/plugins' }, (err, server) => {
-
-                expect(err).to.not.exist();
-                expect(server.plugins.helloworld.hello).to.equal('world');
-                done();
-            });
+            const server = await Glue.compose(manifest);
+            expect(server.plugins.helloworld.hello).to.equal('world');
+            const response = await server.inject('/test/plugin');
+            expect(response.statusCode).to.equal(200);
+            const secondResponse = await server.inject('/override/me/second');
+            expect(secondResponse.statusCode).to.equal(200);
+            expect(secondResponse.payload).to.equal('second');
         });
     });
 
-    it('composes a server with a preConnections handler', (done) => {
+    it('composes a server with a preRegister handler', async () => {
 
+        let count = 0;
         const manifest = {};
         const options = {
-            preConnections: function (server, callback) {
+            preRegister: function (server) {
 
-                callback();
+                ++count;
             }
         };
 
-        Glue.compose(manifest, options, (err, server) => {
-
-            expect(err).to.not.exist();
-            done();
-        });
+        await Glue.compose(manifest, options);
+        expect(count).to.equal(1);
     });
 
-    it('composes a server with a preRegister handler', (done) => {
-
-        const manifest = {};
-        const options = {
-            preRegister: function (server, callback) {
-
-                callback();
-            }
-        };
-
-        Glue.compose(manifest, options, (err, server) => {
-
-            expect(err).to.not.exist();
-            done();
-        });
-    });
-
-    it('errors on failed pre handler', (done) => {
+    it('errors on failed pre handler', async () => {
 
         const manifest = {};
         const options = {
@@ -549,14 +349,10 @@ describe('compose()', () => {
             }
         };
 
-        Glue.compose(manifest, options, (err, server) => {
-
-            expect(err).to.exist();
-            done();
-        });
+        await expect(Glue.compose(manifest, options)).to.reject();
     });
 
-    it('throws on bogus options.realativeTo path (server.cache)', (done) => {
+    it('throws on bogus options.relativeTo path (server.cache)', async () => {
 
         const manifest = {
             server: {
@@ -564,103 +360,64 @@ describe('compose()', () => {
             }
         };
 
-        expect(() => {
-
-            Glue.compose(manifest, { relativeTo: __dirname + '/badpath' }, () => { });
-        }).to.throw(/Cannot find module/);
-        done();
+        await expect(Glue.compose(manifest, { relativeTo: __dirname + '/badpath' })).to.reject(Error, /Cannot find module/);
     });
 
-    it('throws on bogus options.realativeTo path (plugins)', (done) => {
+    it('throws on bogus options.relativeTo path (plugins)', async () => {
 
         const manifest = {
-            registrations: [
-                {
-                    plugin: './helloworld.js'
-                }
-            ]
+            register: {
+                plugins: [
+                    {
+                        plugin: './helloworld.js'
+                    }
+                ]
+            }
         };
 
-        expect(() => {
-
-            Glue.compose(manifest, { relativeTo: __dirname + '/badpath' }, () => { });
-        }).to.throw(/Cannot find module/);
-        done();
+        await expect(Glue.compose(manifest, { relativeTo: __dirname + '/badpath' })).to.reject(Error, /Cannot find module/);
     });
 
-    it('throws on options not an object', (done) => {
+    it('throws on options not an object', async () => {
 
         const manifest = {};
 
-        expect(() => {
-
-            Glue.compose(manifest, 'hello', () => { });
-        }).to.throw(/Invalid options/);
-        done();
+        await expect(Glue.compose(manifest, 'hello')).to.reject(Error, /Invalid options/);
     });
 
-    it('throws on invalid manifest (not an object)', (done) => {
+    it('throws on invalid manifest (not an object)', async () => {
 
         const manifest = 'hello';
 
-        expect(() => {
-
-            Glue.compose(manifest, () => { });
-        }).to.throw(/Invalid manifest/);
-        done();
+        await expect(Glue.compose(manifest)).to.reject(Error, /Invalid manifest/);
     });
 
-    it('throws on invalid manifest (server not an object)', (done) => {
+    it('throws on invalid manifest (server not an object)', async () => {
 
         const manifest = {
             server: 'hello'
         };
 
-        expect(() => {
-
-            Glue.compose(manifest, () => { });
-        }).to.throw(/Invalid manifest/);
-        done();
+        await expect(Glue.compose(manifest)).to.reject(Error, /Invalid manifest/);
     });
 
-    it('throws on invalid manifest (connections not an array)', (done) => {
-
-        const manifest = {
-            connections: 'hello'
-        };
-
-        expect(() => {
-
-            Glue.compose(manifest, () => { });
-        }).to.throw(/Invalid manifest/);
-        done();
-    });
-
-    it('throws on invalid manifest (connections array items not objects)', (done) => {
+    it('throws on invalid manifest (connections present)', async () => {
 
         const manifest = {
             connections: [
-                'hello'
+                {}
             ]
         };
 
-        expect(() => {
-
-            Glue.compose(manifest, () => { });
-        }).to.throw(/Invalid manifest/);
-        done();
+        await expect(Glue.compose(manifest)).to.reject(Error, /Invalid manifest/);
     });
 
-    it('throws on invalid manifest (registrations not an array)', (done) => {
+    it('throws on invalid manifest (register not an object)', async () => {
 
         const manifest = {
-            registrations: 'hello'
+            register: 'hello'
         };
 
-        expect(() => {
-
-            Glue.compose(manifest, () => { });
-        }).to.throw(/Invalid manifest/);
-        done();
+        await expect(Glue.compose(manifest)).to.reject(Error, /Invalid manifest/);
     });
 });

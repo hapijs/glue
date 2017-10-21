@@ -15,18 +15,17 @@
     "hapi"
   ],
   "engines": {
-    "node": ">=4.0"
+    "node": ">=8.0"
   },
   "dependencies": {
-    "hapi": "11.x.x || 12.x.x || 13.x.x || 14.x.x || 15.x.x || 16.x.x",
-    "hoek": "4.x.x",
-    "items": "2.x.x",
-    "joi": "10.x.x"
+    "hapi": "17.x.x",
+    "hoek": "5.x.x",
+    "joi": "13.x.x"
   },
   "devDependencies": {
     "catbox-memory": "2.x.x",
-    "code": "4.x.x",
-    "lab": "14.x.x"
+    "code": "5.x.x",
+    "lab": "15.x.x"
   },
   "scripts": {
     "test": "node node_modules/lab/bin/lab -a code -t 100 -L",
