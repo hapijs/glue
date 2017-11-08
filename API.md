@@ -106,15 +106,19 @@ const options = {
     relativeTo: __dirname
 };
 
-try {
-    const server = await Glue.compose(manifest, options);
-    await server.start();
-    console.log('hapi days!');
+const startServer = async function () {
+    try {
+        const server = await Glue.compose(manifest, options);
+        await server.start();
+        console.log('hapi days!');
+    }
+    catch (err) {
+        console.error(err);
+        process.exit(1);
+    }
 }
-catch (err) {
-    console.error(err);
-    process.exit(1);
-}
+
+startServer();
 ```
 
 The above is translated into the following equivalent hapi API calls.
