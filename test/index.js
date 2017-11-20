@@ -150,7 +150,7 @@ describe('compose()', () => {
             expect(server.plugins.helloworld.hello).to.equal('world');
         });
 
-        it('has a registration with plugin function instead of path to be required', async () => {
+        it('has a registration with plugin object instead of path to be required', async () => {
 
             const manifest = {
                 register: {
