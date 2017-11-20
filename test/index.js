@@ -385,6 +385,15 @@ describe('compose()', () => {
         await expect(Glue.compose(manifest, 'hello')).to.reject(Error, /Invalid options/);
     });
 
+    it('throws on invalid options (preConnections present)', async () => {
+
+        const options = {
+            preConnections: false
+        };
+
+        await expect(Glue.compose({}, options)).to.reject(Error, /Invalid options/);
+    });
+
     it('throws on invalid manifest (not an object)', async () => {
 
         const manifest = 'hello';
