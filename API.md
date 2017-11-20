@@ -98,7 +98,10 @@ const manifest = {
                     prefix: '/admin'
                 }
             }
-        ]
+        ],
+        options: {
+            once: false
+        }
     }
 };
 
@@ -116,7 +119,7 @@ const startServer = async function () {
         console.error(err);
         process.exit(1);
     }
-}
+};
 
 startServer();
 ```
@@ -124,30 +127,38 @@ startServer();
 The above is translated into the following equivalent hapi API calls.
 
 ```javascript
-try {
-    const server = Hapi.server({ cache: [{ engine: require('redis') }], port: 8000 });
-    const plugins = [];
-    const registerOptions = {};
-    let pluginPath;
+'use strict';
 
-    pluginPath = Path.join(__dirname, './awesome-plugin.js');
-    plugins.push({ plugin: require(pluginPath) });
+const Hapi = require('hapi');
 
-    plugins.push({ plugin: require('myplugin'), options:{ uglify: true } });
+const startServer = async function () {
+    try {
+        const server = Hapi.server({ cache: [{ engine: require('redis') }], port: 8000 });
+        const plugins = [];
+        const registerOptions = { once: false };
+        let pluginPath;
 
-    pluginPath = Path.join(__dirname, './ui-user');
-    plugins.push({ plugin: require(pluginPath) });
+        pluginPath = Path.join(__dirname, './awesome-plugin.js');
+        plugins.push({ plugin: require(pluginPath) });
 
-    pluginPath = Path.join(__dirname, './ui-admin');
-    plugins.push({ plugin: require(pluginPath), options: { sessiontime: 500 }, routes: { prefix: '/admin' } });
+        plugins.push({ plugin: require('myplugin'), options:{ uglify: true } });
 
-    await server.register(plugins, registerOptions);
+        pluginPath = Path.join(__dirname, './ui-user');
+        plugins.push({ plugin: require(pluginPath) });
 
-    await server.start();
-    console.log('hapi days!');
-}
-catch (err)
-    console.error(err);
-    process.exit(1);
-}
+        pluginPath = Path.join(__dirname, './ui-admin');
+        plugins.push({ plugin: require(pluginPath), options: { sessiontime: 500 }, routes: { prefix: '/admin' } });
+
+        await server.register(plugins, registerOptions);
+
+        await server.start();
+        console.log('hapi days!');
+    }
+    catch (err)
+        console.error(err);
+        process.exit(1);
+    }
+};
+
+startServer();
 ```
