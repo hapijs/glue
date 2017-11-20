@@ -326,13 +326,13 @@ describe('compose()', () => {
 
         const manifest = {};
         const options = {
-            preRegister: function (server, callback) {
+            preRegister: (server) => {
 
-                callback({ error: 'failed' });
+                throw new Error('preRegister failed');
             }
         };
 
-        await expect(Glue.compose(manifest, options)).to.reject();
+        await expect(Glue.compose(manifest, options)).to.reject(Error, /preRegister failed/);
     });
 
     it('throws on bogus options.relativeTo path (server.cache)', async () => {
