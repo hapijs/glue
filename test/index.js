@@ -165,23 +165,6 @@ describe('compose()', () => {
             expect(server.plugins.helloworld.hello).to.equal('world');
         });
 
-        it('has a registration with no configuration', async () => {
-
-            const manifest = {
-                register: {
-                    plugins: [
-                        {
-                            plugin: '../test/plugins/helloworld.js'
-                        }
-                    ]
-                }
-            };
-
-            const server = await Glue.compose(manifest);
-            expect(server.plugins.helloworld).to.exist();
-            expect(server.plugins.helloworld.hello).to.equal('world');
-        });
-
         it('passes through original plugin options', async () => {
 
             const manifest = {
