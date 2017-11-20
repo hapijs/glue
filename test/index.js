@@ -312,8 +312,9 @@ describe('compose()', () => {
         let count = 0;
         const manifest = {};
         const options = {
-            preRegister: function (server) {
+            preRegister: (server) => {
 
+                expect(server.info).to.be.an.object();
                 ++count;
             }
         };
@@ -322,13 +323,77 @@ describe('compose()', () => {
         expect(count).to.equal(1);
     });
 
-    it('errors on failed pre handler', async () => {
+    it('composes a server with an async preRegister handler', async () => {
+
+        let count = 0;
+        const manifest = {
+            register: {
+                plugins: [
+                    {
+                        plugin: {
+                            name: 'increment',
+                            version: '1.0.0',
+                            register: (server, options) => {
+
+                                expect(server.info).to.be.an.object();
+                                expect(count).to.equal(1);
+                                count = count + options.increment;
+                            }
+                        },
+                        options: {
+                            increment: 2
+                        }
+                    }
+                ]
+            }
+        };
+        const options = {
+            preRegister: (server) => {
+
+                expect(server.info).to.be.an.object();
+                expect(count).to.equal(0);
+                return new Promise((resolve) => {
+
+                    process.nextTick(() => {
+
+                        ++count;
+                        resolve();
+                    });
+                });
+            }
+        };
+
+        await Glue.compose(manifest, options);
+        expect(count).to.equal(3);
+    });
+
+    it('errors on failed preRegister handler', async () => {
 
         const manifest = {};
         const options = {
             preRegister: (server) => {
 
                 throw new Error('preRegister failed');
+            }
+        };
+
+        await expect(Glue.compose(manifest, options)).to.reject(Error, /preRegister failed/);
+    });
+
+    it('errors on failed async preRegister handler', async () => {
+
+        const manifest = {};
+        const options = {
+            preRegister: (server) => {
+
+                expect(server.info).to.be.an.object();
+                return new Promise((resolve, reject) => {
+
+                    process.nextTick(() => {
+
+                        reject(new Error('preRegister failed'));
+                    });
+                });
             }
         };
 
