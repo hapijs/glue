@@ -63,7 +63,7 @@ Composes a hapi server object where:
 
 ### Notes
 
-If you are developing a plugin, ensure your plugin dependencies are properly managed to guarantee that all dependencies are loaded before your plugin registration completes.  See [`server.dependency(dependencies, [after])`](http://hapijs.com/api#serverdependencydependencies-after) for more information.
+If you are developing a plugin, ensure your plugin dependencies are properly managed to guarantee that all dependencies are loaded before your plugin registration completes.  See [`server.dependency(dependencies, [after])`](https://hapijs.com/api#-serverdependencydependencies-after) for more information.
 
 ## Usage
 
