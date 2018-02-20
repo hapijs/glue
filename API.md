@@ -1,17 +1,17 @@
 
 ## Interface
 
-Glue exports a single function `compose` accepting a JSON `manifest` specifying the hapi server options and plugin registrations and returns a hapi `server` object.
+Glue exports a single function `compose` accepting a JSON `manifest` specifying the hapi server options and plugin registrations and returns a [hapi](https://hapijs.com/api) server object.
 To start the server use the returned object to call `await server.start()`.
 
 ### `await compose(manifest, [options])`
 
 Composes a hapi server object where:
 + `manifest` - an object having:
-  * `server` - an object containing the options passed to [new Hapi.Server([options])](http://hapijs.com/api#new-serveroptions)
+  * `server` - an object containing the options passed to [hapi's](https://hapijs.com/api) `new Hapi.Server([options])`
     + If `server.cache` is specified, Glue will parse the entry and replace any prototype function field (eg. `engine`) specified as string by calling `require()` with that string.
   * `register` - an object containing two properties: the `plugins` to be registered and `options` to pass to `server.register`
-    + `plugins` - an array of entries to register with [await server.register(plugins, [options])](http://hapijs.com/api#-await-serverregisterplugins-options).
+    + `plugins` - an array of entries to register with [hapi's](https://hapijs.com/api) `await server.register(plugins, [options])`
       * each entry may be one of three alternatives:
         1. A string to be `require()`d during composition.
         ```js
@@ -63,7 +63,7 @@ Composes a hapi server object where:
 
 ### Notes
 
-If you are developing a plugin, ensure your plugin dependencies are properly managed to guarantee that all dependencies are loaded before your plugin registration completes.  See [`server.dependency(dependencies, [after])`](http://hapijs.com/api#serverdependencydependencies-after) for more information.
+If you are developing a plugin, ensure your plugin dependencies are properly managed to guarantee that all dependencies are loaded before your plugin registration completes.  See [hapi's](https://hapijs.com/api) `server.dependency(dependencies, [after])` for more information.
 
 ## Usage
 
