@@ -13,6 +13,6 @@ Describe your issue here, include manifests and plugin objects if needed.
 const manifest = {};
 ```
 
-#### Which result you had ?
+#### What result did you get  ?
 
 #### What did you expect ?
