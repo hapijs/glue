@@ -1,6 +1,7 @@
 'use strict';
 // Load modules
 
+const Path = require('path');
 const Glue = require('..');
 const Lab = require('lab');
 const Hoek = require('hoek');
@@ -105,6 +106,19 @@ describe('compose()', () => {
         expect(server.info.port).to.equal(0);
     });
 
+    it('composes a server with server.cache.engine resolved using options.relativeTo and absolute strategy path', async () => {
+
+        const manifest = {
+            server: {
+                cache: Path.join(__dirname, '../node_modules/catbox-memory')
+            }
+        };
+
+        const server = await Glue.compose(manifest, { relativeTo: __dirname + '/plugins' });
+        expect(server.info).to.be.an.object();
+        expect(server.info.port).to.equal(0);
+    });
+
     it('composes a server without modifying the manifest', async () => {
 
         const manifest = {
@@ -131,6 +145,16 @@ describe('compose()', () => {
                 register: {
                     plugins: []
                 }
+            };
+
+            const server = await Glue.compose(manifest);
+            expect(server.plugins).length(0);
+        });
+
+        it('has an empty register object', async () => {
+
+            const manifest = {
+                register: { }
             };
 
             const server = await Glue.compose(manifest);
@@ -265,6 +289,22 @@ describe('compose()', () => {
                     plugins: [
                         {
                             plugin: './helloworld.js'
+                        }
+                    ]
+                }
+            };
+
+            const server = await Glue.compose(manifest, { relativeTo: __dirname + '/plugins' });
+            expect(server.plugins.helloworld.hello).to.equal('world');
+        });
+
+        it('has a registration with the plugin resolved using options.relativeTo, but with absolute path', async () => {
+
+            const manifest = {
+                register: {
+                    plugins: [
+                        {
+                            plugin: Path.join(__dirname, 'plugins/helloworld.js')
                         }
                     ]
                 }
