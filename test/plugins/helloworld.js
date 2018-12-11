@@ -6,4 +6,5 @@ exports.register = function (server, options) {
 };
 
 exports.name = 'helloworld';
+
 exports.multiple = false;
