@@ -19,13 +19,13 @@
   },
   "dependencies": {
     "hapi": "17.x.x",
-    "hoek": "5.x.x",
-    "joi": "13.x.x"
+    "hoek": "6.x.x",
+    "joi": "14.x.x"
   },
   "devDependencies": {
-    "catbox-memory": "3.x.x",
+    "catbox-memory": "4.x.x",
     "code": "5.x.x",
-    "lab": "15.x.x"
+    "lab": "18.x.x"
   },
   "scripts": {
     "test": "node node_modules/lab/bin/lab -a code -t 100 -L",
