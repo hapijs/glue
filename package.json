@@ -18,7 +18,7 @@
     "node": ">=8.0"
   },
   "dependencies": {
-    "hapi": "17.x.x",
+    "hapi": "18.x.x",
     "hoek": "6.x.x",
     "joi": "14.x.x"
   },

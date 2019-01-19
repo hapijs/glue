@@ -9,7 +9,7 @@ To start the server use the returned object to call `await server.start()`.
 Composes a hapi server object where:
 + `manifest` - an object having:
   * `server` - an object containing the options passed to [hapi's](https://hapijs.com/api) `new Hapi.Server([options])`
-    + If `server.cache` is specified, glue will parse the entry and replace any prototype function field (eg. `engine`) specified as string by calling `require()` with that string.
+    + If `server.cache` is specified, glue will parse the entry and replace any prototype function field (eg. `provider`) specified as string by calling `require()` with that string.
   * `register` - an object containing two properties: the `plugins` to be registered and `options` to pass to `server.register`
     + `plugins` - an array of entries to register with [hapi's](https://hapijs.com/api) `await server.register(plugins, [options])`
       * each entry may be one of three alternatives:
@@ -133,7 +133,7 @@ const Hapi = require('hapi');
 
 const startServer = async function () {
     try {
-        const server = Hapi.server({ cache: [{ engine: require('redis') }], port: 8000 });
+        const server = Hapi.server({ cache: [{ provider: require('redis') }], port: 8000 });
         const plugins = [];
         const registerOptions = { once: false };
         let pluginPath;

@@ -63,12 +63,12 @@ describe('compose()', () => {
         expect(server.info.port).to.equal(0);
     });
 
-    it('composes a server with server.cache.engine as a string', async () => {
+    it('composes a server with server.cache.provider as a string', async () => {
 
         const manifest = {
             server: {
                 cache: {
-                    engine: '../node_modules/catbox-memory'
+                    provider: '../node_modules/catbox-memory'
                 }
             }
         };
@@ -78,12 +78,12 @@ describe('compose()', () => {
         expect(server.info.port).to.equal(0);
     });
 
-    it('composes a server with server.cache.engine as a function', async () => {
+    it('composes a server with server.cache.provider as a function', async () => {
 
         const manifest = {
             server: {
                 cache: [{
-                    engine: require('catbox-memory')
+                    provider: require('catbox-memory')
                 }]
             }
         };
@@ -93,7 +93,29 @@ describe('compose()', () => {
         expect(server.info.port).to.equal(0);
     });
 
-    it('composes a server with server.cache.engine resolved using options.relativeTo', async () => {
+    it('composes a server with server.cache.provider as an object', async () => {
+
+        const manifest = {
+            server: {
+                cache: {
+                    provider: {
+                        constructor: require('catbox-memory'),
+                        options: {
+                            partition: 'x',
+                            maxByteSize: 10000
+                        }
+                    },
+                    name: 'memoryCache'
+                }
+            }
+        };
+
+        const server = await Glue.compose(manifest);
+        expect(server.info).to.be.an.object();
+        expect(server.info.port).to.equal(0);
+    });
+
+    it('composes a server with server.cache.provider resolved using options.relativeTo', async () => {
 
         const manifest = {
             server: {
@@ -106,7 +128,7 @@ describe('compose()', () => {
         expect(server.info.port).to.equal(0);
     });
 
-    it('composes a server with server.cache.engine resolved using options.relativeTo and absolute strategy path', async () => {
+    it('composes a server with server.cache.provider resolved using options.relativeTo and absolute strategy path', async () => {
 
         const manifest = {
             server: {
