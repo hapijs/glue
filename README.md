@@ -23,4 +23,6 @@ Glue can support different versions of hapi. Adding support for a new version of
 
 By default NPM will resolve glue's dependency on hapi using the most recent supported version of hapi. To force a specific supported hapi version for your project, include hapi in your package dependencies along side of glue.
 
-Glue version 5 currently only supports hapi **17**. For support of hapi **11**, **12**, **13**, **14**, **15**, or **16** please use [glue@v4](https://github.com/hapijs/glue/tree/v4).
+Glue version 6 currently supports hapi **18**.
+[glue@v5](https://github.com/hapijs/glue/tree/v5) supports hapi **17**.
+[glue@v4](https://github.com/hapijs/glue/tree/v4) supports hapi **11**, **12**, **13**, **14**, **15**, or **16**.
