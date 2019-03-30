@@ -429,6 +429,23 @@ describe('compose()', () => {
         expect(count).to.equal(3);
     });
 
+    it('composes a server with extensions', async () => {
+
+        const manifest = {
+            register: {
+                extensions: [
+                    { type: 'onPreResponse', method: (v) => v, options: {} },
+                    { type: 'onPreResponse', method: (v) => v, options: { bind: { foo: 'bar' } } },
+                    { type: 'onRequest', method: (v) => v, options: {} }
+                ]
+            }
+        };
+
+        const server = await Glue.compose(manifest);
+        expect(server._core.extensions.route.onPreResponse._topo.nodes.length).to.equal(2);
+        expect(server._core.extensions.route.onRequest._topo.nodes.length).to.equal(1);
+    });
+
     it('errors on failed preRegister handler', async () => {
 
         const manifest = {};
