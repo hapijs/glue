@@ -1,4 +1,3 @@
-
 ## Interface
 
 Glue exports a single function `compose` accepting a JSON `manifest` specifying the hapi server options and plugin registrations and returns a [hapi](https://hapijs.com/api) server object.
@@ -70,7 +69,7 @@ If you are developing a plugin, ensure your plugin dependencies are properly man
 ```javascript
 'use strict';
 
-const Glue = require('glue');
+const Glue = require('@hapi/glue');
 
 const manifest = {
     server: {
@@ -129,7 +128,7 @@ The above is translated into the following equivalent hapi API calls.
 ```javascript
 'use strict';
 
-const Hapi = require('hapi');
+const Hapi = require('@hapi/hapi');
 
 const startServer = async function () {
     try {
