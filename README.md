@@ -2,7 +2,7 @@
 
 # glue
 
-[![Build Status](https://travis-ci.org/hapijs/glue.svg)](https://travis-ci.org/hapijs/glue)
+[![Build Status](https://travis-ci.org/hapijs/glue.svg?branch=v5)](https://travis-ci.org/hapijs/glue)
 
 **glue** version 5 only supports hapi **17**.
 
