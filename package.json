@@ -1,10 +1,16 @@
 {
   "name": "@hapi/glue",
   "description": "Server composer for hapi.js",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "repository": "git://github.com/hapijs/glue",
   "main": "lib/index.js",
-  "keywords": ["server", "pack", "composer", "manifest", "hapi"],
+  "keywords": [
+    "server",
+    "pack",
+    "composer",
+    "manifest",
+    "hapi"
+  ],
   "dependencies": {
     "@hapi/hapi": "17.x.x",
     "@hapi/hoek": "6.x.x",
