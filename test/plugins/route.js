@@ -13,4 +13,5 @@ exports.register = function (server, options) {
 };
 
 exports.name = 'route';
+
 exports.multiple = true;

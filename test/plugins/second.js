@@ -13,4 +13,5 @@ exports.register = function (server, options) {
 };
 
 exports.name = 'second';
+
 exports.multiple = true;

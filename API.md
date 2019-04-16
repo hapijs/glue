@@ -70,7 +70,7 @@ If you are developing a plugin, ensure your plugin dependencies are properly man
 ```javascript
 'use strict';
 
-const Glue = require('glue');
+const Glue = require('@hapi/glue');
 
 const manifest = {
     server: {

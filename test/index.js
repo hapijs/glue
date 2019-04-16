@@ -1,25 +1,35 @@
 'use strict';
-// Load modules
 
+const CatboxMemory = require('@hapi/catbox-memory');
+const Code = require('@hapi/code');
 const Glue = require('..');
-const Lab = require('lab');
-const Hoek = require('hoek');
+const Lab = require('@hapi/lab');
+const Hoek = require('@hapi/hoek');
 
-
-// Declare internals
 
 const internals = {};
 
 
-// Test shortcuts
+const { describe, it } = exports.lab = Lab.script();
+const expect = Code.expect;
 
-const { describe, expect, it } = exports.lab = Lab.script();
 
 describe('compose()', () => {
 
     it('composes a server with an empty manifest', async () => {
 
         const manifest = {};
+        const server = await Glue.compose(manifest);
+        expect(server.info).to.be.an.object();
+        expect(server.info.port).to.equal(0);
+    });
+
+    it('composes a server with an empty manifest register', async () => {
+
+        const manifest = {
+            register: {}
+        };
+
         const server = await Glue.compose(manifest);
         expect(server.info).to.be.an.object();
         expect(server.info.port).to.equal(0);
@@ -40,7 +50,7 @@ describe('compose()', () => {
 
         const manifest = {
             server: {
-                cache: '../node_modules/catbox-memory'
+                cache: '../node_modules/@hapi/catbox-memory'
             }
         };
 
@@ -53,7 +63,7 @@ describe('compose()', () => {
 
         const manifest = {
             server: {
-                cache: ['../node_modules/catbox-memory']
+                cache: ['../node_modules/@hapi/catbox-memory']
             }
         };
 
@@ -67,7 +77,7 @@ describe('compose()', () => {
         const manifest = {
             server: {
                 cache: {
-                    engine: '../node_modules/catbox-memory'
+                    engine: '../node_modules/@hapi/catbox-memory'
                 }
             }
         };
@@ -82,7 +92,7 @@ describe('compose()', () => {
         const manifest = {
             server: {
                 cache: [{
-                    engine: require('catbox-memory')
+                    engine: CatboxMemory
                 }]
             }
         };
@@ -96,7 +106,20 @@ describe('compose()', () => {
 
         const manifest = {
             server: {
-                cache: '../../node_modules/catbox-memory'
+                cache: '../../node_modules/@hapi/catbox-memory'
+            }
+        };
+
+        const server = await Glue.compose(manifest, { relativeTo: __dirname + '/plugins' });
+        expect(server.info).to.be.an.object();
+        expect(server.info.port).to.equal(0);
+    });
+
+    it('composes a server with server.cache.engine resolved using options.relativeTo and non-relative path', async () => {
+
+        const manifest = {
+            server: {
+                cache: '@hapi/catbox-memory'
             }
         };
 
@@ -298,7 +321,7 @@ describe('compose()', () => {
                     plugins: [
                         '../test/plugins/helloworld.js',
                         {
-                            plugin : '../test/plugins/second.js',
+                            plugin: '../test/plugins/second.js',
                             options: {
                                 value: 'second'
                             }
@@ -356,7 +379,7 @@ describe('compose()', () => {
 
         const manifest = {
             server: {
-                cache: './catbox-memory'
+                cache: './@hapi/catbox-memory'
             }
         };
 
