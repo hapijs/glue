@@ -1,7 +1,7 @@
 {
   "name": "@hapi/glue",
   "description": "Server composer for hapi.js",
-  "version": "6.1.0",
+  "version": "6.1.1",
   "repository": {
     "type": "git",
     "url": "git://github.com/hapijs/glue"
