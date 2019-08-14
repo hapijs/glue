@@ -2,7 +2,7 @@
 
 # glue
 
-[![Build Status](https://travis-ci.org/hapijs/glue.svg)](https://travis-ci.org/hapijs/glue)
+[![Build Status](https://travis-ci.org/hapijs/glue.svg)](https://travis-ci.org/hapijs/glue) [![Greenkeeper badge](https://badges.greenkeeper.io/hapijs/glue.svg)](https://greenkeeper.io/)
 
 ### A server composer for hapi.js.
 
