@@ -16,13 +16,13 @@
   ],
   "dependencies": {
     "@hapi/hapi": "18.x.x",
-    "@hapi/hoek": "6.x.x",
+    "@hapi/hoek": "8.x.x",
     "@hapi/joi": "15.x.x"
   },
   "devDependencies": {
     "@hapi/catbox-memory": "4.x.x",
-    "@hapi/code": "5.x.x",
-    "@hapi/lab": "18.x.x"
+    "@hapi/code": "6.x.x",
+    "@hapi/lab": "20.x.x"
   },
   "scripts": {
     "test": "lab -a @hapi/code -t 100 -L",
