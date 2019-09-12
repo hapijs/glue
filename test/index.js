@@ -115,6 +115,28 @@ describe('compose()', () => {
         expect(server.info.port).to.equal(0);
     });
 
+    it('composes a server with server.cache.provider as an object (string constructor)', async () => {
+
+        const manifest = {
+            server: {
+                cache: {
+                    provider: {
+                        constructor: '../node_modules/@hapi/catbox-memory',
+                        options: {
+                            partition: 'x',
+                            maxByteSize: 10000
+                        }
+                    },
+                    name: 'memoryCache'
+                }
+            }
+        };
+
+        const server = await Glue.compose(manifest);
+        expect(server.info).to.be.an.object();
+        expect(server.info.port).to.equal(0);
+    });
+
     it('composes a server with server.cache.provider resolved using options.relativeTo', async () => {
 
         const manifest = {
