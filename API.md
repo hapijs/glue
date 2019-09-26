@@ -1,3 +1,4 @@
+
 ## Interface
 
 Glue exports a single function `compose` accepting a JSON `manifest` specifying the hapi server options and plugin registrations and returns a [hapi](https://hapijs.com/api) server object.
