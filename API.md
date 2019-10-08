@@ -1,7 +1,25 @@
 
+## Introduction
+
+### A server composer for hapi.js.
+
+Glue provides configuration based composition of hapi's Server object. Specifically it wraps
+
+ * `server = Hapi.server(Options)`
+ * `server.register(Plugins, Options)`
+
+calling each based on the configuration generated from the glue manifest.
+
+### hapi version dependency
+
+Version 6 supports hapi **v18**   
+Version 5 supports hapi **v17**
+
+By default npm will resolve glue's dependency on hapi using the most recent supported version of hapi. To force a specific supported hapi version for your project, include hapi in your package dependencies along side of glue.
+
 ## Interface
 
-Glue exports a single function `compose` accepting a JSON `manifest` specifying the hapi server options and plugin registrations and returns a [hapi](https://hapijs.com/api) server object.
+Glue exports a single function `compose` accepting a JSON `manifest` specifying the hapi server options and plugin registrations and returns a [hapi](https://hapi.dev/api) server object.
 To start the server use the returned object to call `await server.start()`.
 
 ### `await compose(manifest, [options])`
@@ -63,7 +81,7 @@ Composes a hapi server object where:
 
 ### Notes
 
-If you are developing a plugin, ensure your plugin dependencies are properly managed to guarantee that all dependencies are loaded before your plugin registration completes.  See [hapi's](https://hapijs.com/api) `server.dependency(dependencies, [after])` for more information.
+If you are developing a plugin, ensure your plugin dependencies are properly managed to guarantee that all dependencies are loaded before your plugin registration completes.  See [hapi's](https://hapi.dev/api) `server.dependency(dependencies, [after])` for more information.
 
 ## Usage
 
