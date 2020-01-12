@@ -7,6 +7,9 @@
     "url": "git://github.com/hapijs/glue"
   },
   "main": "lib/index.js",
+  "files": [
+    "lib"
+  ],
   "keywords": [
     "server",
     "pack",
@@ -15,14 +18,14 @@
     "hapi"
   ],
   "dependencies": {
-    "@hapi/hapi": "18.x.x",
-    "@hapi/hoek": "8.x.x",
-    "@hapi/joi": "16.x.x"
+    "@hapi/hapi": "19.x.x",
+    "@hapi/hoek": "9.x.x",
+    "@hapi/joi": "17.x.x"
   },
   "devDependencies": {
-    "@hapi/catbox-memory": "4.x.x",
-    "@hapi/code": "6.x.x",
-    "@hapi/lab": "20.x.x"
+    "@hapi/catbox-memory": "5.x.x",
+    "@hapi/code": "8.x.x",
+    "@hapi/lab": "22.x.x"
   },
   "scripts": {
     "test": "lab -a @hapi/code -t 100 -L",
