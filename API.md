@@ -12,7 +12,9 @@ calling each based on the configuration generated from the glue manifest.
 
 ### hapi version dependency
 
-Version 6 supports hapi **v18**   
+Version 8 supports hapi **v20**
+Version 7 supports hapi **v19**
+Version 6 supports hapi **v18**
 Version 5 supports hapi **v17**
 
 By default npm will resolve glue's dependency on hapi using the most recent supported version of hapi. To force a specific supported hapi version for your project, include hapi in your package dependencies along side of glue.
