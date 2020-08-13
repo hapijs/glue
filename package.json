@@ -18,13 +18,16 @@
     "hapi"
   ],
   "dependencies": {
-    "@hapi/hapi": "19.x.x",
     "@hapi/hoek": "9.x.x",
     "@hapi/validate": "1.x.x"
+  },
+  "peerDependencies": {
+    "@hapi/hapi": ">=19"
   },
   "devDependencies": {
     "@hapi/catbox-memory": "5.x.x",
     "@hapi/code": "8.x.x",
+    "@hapi/hapi": "^20.x.x",
     "@hapi/lab": "23.x.x"
   },
   "scripts": {
