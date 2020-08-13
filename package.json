@@ -18,7 +18,7 @@
     "hapi"
   ],
   "dependencies": {
-    "@hapi/hapi": "19.x.x",
+    "@hapi/hapi": "20.x.x",
     "@hapi/hoek": "9.x.x",
     "@hapi/validate": "1.x.x"
   },
