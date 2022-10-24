@@ -406,6 +406,19 @@ describe('compose()', () => {
         });
     });
 
+    it('resolves ES modules from a path', async () => {
+
+        const manifest = {
+            register: {
+                plugins: ['../test/plugins/helloworld.mjs']
+            }
+        };
+
+        const server = await Glue.compose(manifest);
+        expect(server.plugins.helloworld).to.exist();
+        expect(server.plugins.helloworld.hello).to.equal('world (esm)');
+    });
+
     it('composes a server with a preRegister handler', async () => {
 
         let count = 0;
@@ -507,7 +520,7 @@ describe('compose()', () => {
             }
         };
 
-        await expect(Glue.compose(manifest, { relativeTo: __dirname + '/badpath' })).to.reject(Error, /Cannot find module/);
+        await expect(Glue.compose(manifest, { relativeTo: __dirname + '/badpath' })).to.reject(Error, /Glue could not resolve a module at/);
     });
 
     it('throws on bogus options.relativeTo path (plugins)', async () => {
@@ -522,7 +535,7 @@ describe('compose()', () => {
             }
         };
 
-        await expect(Glue.compose(manifest, { relativeTo: __dirname + '/badpath' })).to.reject(Error, /Cannot find module/);
+        await expect(Glue.compose(manifest, { relativeTo: __dirname + '/badpath' })).to.reject(Error, /Glue could not resolve a module at/);
     });
 
     it('throws on options not an object', async () => {

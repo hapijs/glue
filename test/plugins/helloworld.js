@@ -2,7 +2,7 @@
 
 exports.register = function (server, options) {
 
-    server.expose('hello', options.who || 'world');
+    server.expose('hello', options.who ?? 'world');
 };
 
 exports.name = 'helloworld';
