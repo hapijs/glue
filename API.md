@@ -12,12 +12,13 @@ calling each based on the configuration generated from the glue manifest.
 
 ### hapi version dependency
 
+Version 9 supports hapi **v20 and v21** as a peer dependency.
 Version 8 supports hapi **v20**
 Version 7 supports hapi **v19**
 Version 6 supports hapi **v18**
 Version 5 supports hapi **v17**
 
-By default npm will resolve glue's dependency on hapi using the most recent supported version of hapi. To force a specific supported hapi version for your project, include hapi in your package dependencies along side of glue.
+As of glue v9, hapi is treated as a peer dependency.  It's recommended to include hapi in your package dependencies alongside of glue, however if you're using npm v7+ then peer dependencies are automatically installed.
 
 ## Interface
 

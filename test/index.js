@@ -2,7 +2,7 @@
 
 const Path = require('path');
 
-const CatboxMemory = require('@hapi/catbox-memory');
+const { Engine: CatboxMemory } = require('@hapi/catbox-memory');
 const Code = require('@hapi/code');
 const Glue = require('..');
 const Lab = require('@hapi/lab');
@@ -69,6 +69,21 @@ describe('compose()', () => {
             server: {
                 cache: {
                     provider: '../node_modules/@hapi/catbox-memory'
+                }
+            }
+        };
+
+        const server = await Glue.compose(manifest);
+        expect(server.info).to.be.an.object();
+        expect(server.info.port).to.equal(0);
+    });
+
+    it('composes a server with server.cache.provider as a string, with engine as default export', async () => {
+
+        const manifest = {
+            server: {
+                cache: {
+                    provider: '../test/catbox-memory-default'
                 }
             }
         };
