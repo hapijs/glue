@@ -2,7 +2,7 @@
 
 const Path = require('path');
 
-const CatboxMemory = require('@hapi/catbox-memory');
+const { Engine: CatboxMemory } = require('@hapi/catbox-memory');
 const Code = require('@hapi/code');
 const Glue = require('..');
 const Lab = require('@hapi/lab');
@@ -69,6 +69,21 @@ describe('compose()', () => {
             server: {
                 cache: {
                     provider: '../node_modules/@hapi/catbox-memory'
+                }
+            }
+        };
+
+        const server = await Glue.compose(manifest);
+        expect(server.info).to.be.an.object();
+        expect(server.info.port).to.equal(0);
+    });
+
+    it('composes a server with server.cache.provider as a string, with engine as default export', async () => {
+
+        const manifest = {
+            server: {
+                cache: {
+                    provider: '../test/catbox-memory-default'
                 }
             }
         };
@@ -391,6 +406,19 @@ describe('compose()', () => {
         });
     });
 
+    it('resolves ES modules from a path', async () => {
+
+        const manifest = {
+            register: {
+                plugins: ['../test/plugins/helloworld.mjs']
+            }
+        };
+
+        const server = await Glue.compose(manifest);
+        expect(server.plugins.helloworld).to.exist();
+        expect(server.plugins.helloworld.hello).to.equal('world (esm)');
+    });
+
     it('composes a server with a preRegister handler', async () => {
 
         let count = 0;
@@ -492,7 +520,7 @@ describe('compose()', () => {
             }
         };
 
-        await expect(Glue.compose(manifest, { relativeTo: __dirname + '/badpath' })).to.reject(Error, /Cannot find module/);
+        await expect(Glue.compose(manifest, { relativeTo: __dirname + '/badpath' })).to.reject(Error, /Glue could not resolve a module at/);
     });
 
     it('throws on bogus options.relativeTo path (plugins)', async () => {
@@ -507,7 +535,7 @@ describe('compose()', () => {
             }
         };
 
-        await expect(Glue.compose(manifest, { relativeTo: __dirname + '/badpath' })).to.reject(Error, /Cannot find module/);
+        await expect(Glue.compose(manifest, { relativeTo: __dirname + '/badpath' })).to.reject(Error, /Glue could not resolve a module at/);
     });
 
     it('throws on options not an object', async () => {

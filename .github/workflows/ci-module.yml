@@ -9,4 +9,7 @@ on:
 
 jobs:
   test:
-    uses: hapijs/.github/.github/workflows/ci-module.yml@master
+    uses: hapijs/.github/.github/workflows/ci-plugin.yml@master
+    with:
+      min-node-version: 14
+      min-hapi-version: 20
