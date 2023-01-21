@@ -23,8 +23,8 @@
     ]
   },
   "dependencies": {
-    "@hapi/hoek": "^10.0.0",
-    "@hapi/validate": "^2.0.0",
+    "@hapi/hoek": "^11.0.2",
+    "@hapi/validate": "^2.0.1",
     "mo-walk": "^1.2.0"
   },
   "peerDependencies": {
@@ -32,10 +32,10 @@
   },
   "devDependencies": {
     "@hapi/catbox-memory": "^6.0.0",
-    "@hapi/code": "^9.0.0",
-    "@hapi/eslint-plugin": "^6.0.0",
-    "@hapi/hapi": "^21.0.0-beta.1",
-    "@hapi/lab": "^25.0.1"
+    "@hapi/code": "^9.0.3",
+    "@hapi/eslint-plugin": "*",
+    "@hapi/hapi": "^21.2.1",
+    "@hapi/lab": "^25.1.2"
   },
   "scripts": {
     "test": "lab -a @hapi/code -t 100 -L",
