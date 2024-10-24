@@ -404,6 +404,37 @@ describe('compose()', () => {
             expect(secondResponse.statusCode).to.equal(200);
             expect(secondResponse.payload).to.equal('second');
         });
+
+        it('has a registration with before and after options', async () => {
+
+            const manifest = {
+                register: {
+                    plugins: [
+                        {
+                            plugin: '../test/plugins/after.js',
+                            after: ['before']
+                        },
+                        {
+                            plugin: require('./plugins/route'),
+                            routes: { prefix: '/test/' }
+                        },
+                        {
+                            plugin: '../test/plugins/before.js',
+                            before: ['after']
+                        }
+                    ],
+                    options: {
+                        routes: { prefix: '/override/me/' }
+                    }
+                }
+            };
+
+            const server = await Glue.compose(manifest);
+            expect(server.plugins.before.exists).to.equal(true);
+            expect(server.plugins.after.exists).to.equal(true);
+            const response = await server.inject('/test/plugin');
+            expect(response.statusCode).to.equal(200);
+        });
     });
 
     it('resolves ES modules from a path', async () => {

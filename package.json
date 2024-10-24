@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@hapi/hoek": "^11.0.2",
+    "@hapi/topo": "^6.0.2",
     "@hapi/validate": "^2.0.1",
     "mo-walk": "^1.2.0"
   },

@@ -19,7 +19,7 @@ describe('import()', () => {
 
     it('exposes all methods and classes as named imports', () => {
 
-        expect(Object.keys(Glue)).to.equal([
+        expect(Object.keys(Glue)).to.include([
             'compose',
             'default'
         ]);

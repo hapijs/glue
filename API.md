@@ -86,6 +86,19 @@ Composes a hapi server object where:
 
 If you are developing a plugin, ensure your plugin dependencies are properly managed to guarantee that all dependencies are loaded before your plugin registration completes.  See [hapi's](https://hapi.dev/api) `server.dependency(dependencies, [after])` for more information.
 
+If you need to sort the plugins before registration, you can do so by adding `before` and `after` to the plugin object.  The `before` and `after` properties are a plugin name or arrays of plugin names that the plugin should be placed before or after.
+
+```js
+{
+    register: {
+        plugins: [
+            { plugin: 'myplugin', before: ['anotherplugin'] },
+            { plugin: 'anotherplugin', after: ['myplugin'] }
+        ]
+    }
+}
+```
+
 ## Usage
 
 ```javascript
@@ -175,7 +188,7 @@ const startServer = async function () {
         await server.start();
         console.log('hapi days!');
     }
-    catch (err)
+    catch (err) {
         console.error(err);
         process.exit(1);
     }
