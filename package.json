@@ -7,6 +7,7 @@
     "url": "git://github.com/hapijs/glue"
   },
   "main": "lib/index.js",
+  "types": "lib/types.d.ts",
   "files": [
     "lib"
   ],
